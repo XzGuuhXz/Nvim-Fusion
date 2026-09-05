@@ -1,11 +1,15 @@
--- Bootstrap lazy.nvim
+-- Bootstrap lazy.nvim deterministically.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  local lazy_commit = "85c7ff3711b730b4030d03144f6db6375044ae82"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", lazyrepo, lazypath })
+  if vim.v.shell_error == 0 then
+    vim.fn.system({ "git", "-C", lazypath, "checkout", "--detach", lazy_commit })
+  end
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { "Failed to install lazy.nvim:\n", "ErrorMsg" },
       { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
@@ -16,13 +20,7 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
--- Configure leaders before plugin specs are loaded.
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
--- Load specs explicitly instead of relying on lazy.nvim's module importer.
--- This avoids "No specs found for module plugins" when the local runtimepath
--- or lazy.nvim cache is stale.
+-- Load specs explicitly so the configuration is deterministic and easy to audit.
 local specs = {
   require("plugins.completion.nvim-cmp"),
   require("plugins.core.autopairs"),

@@ -16,17 +16,33 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
--- Configure leaders before lazy.nvim loads plugin specs.
+-- Configure leaders before plugin specs are loaded.
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Import plugin specifications from lua/plugins/**.
--- The directory intentionally has no lua/plugins/init.lua; lazy.nvim's
--- import mechanism discovers the individual spec files and subdirectories.
-require("lazy").setup({
-  spec = {
-    { import = "plugins" },
-  },
+-- Load specs explicitly instead of relying on lazy.nvim's module importer.
+-- This avoids "No specs found for module plugins" when the local runtimepath
+-- or lazy.nvim cache is stale.
+local specs = {
+  require("plugins.completion.nvim-cmp"),
+  require("plugins.core.autopairs"),
+  require("plugins.core.lsp"),
+  require("plugins.core.lspkind"),
+  require("plugins.core.treesitter"),
+  require("plugins.core.trouble"),
+  require("plugins.editor.nvim-tree"),
+  require("plugins.editor.telescope"),
+  require("plugins.editor.which-key"),
+  require("plugins.git.gitsigns"),
+  require("plugins.ui.alpha"),
+  require("plugins.ui.bufferline"),
+  require("plugins.ui.colorizer"),
+  require("plugins.ui.indent-blankline"),
+  require("plugins.ui.lualine"),
+  require("plugins.ui.tokyonight"),
+}
+
+require("lazy").setup(specs, {
   ui = {
     border = "rounded",
     icons = {

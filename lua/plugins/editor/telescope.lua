@@ -1,5 +1,6 @@
 return {
   "nvim-telescope/telescope.nvim",
+  version = "*",
   cmd = "Telescope",
   dependencies = {
     "nvim-lua/plenary.nvim",
@@ -29,10 +30,7 @@ return {
           height = 0.80,
           preview_cutoff = 120,
         },
-        file_ignore_patterns = {
-          "%.git/",
-          "node_modules/",
-        },
+        file_ignore_patterns = { "%.git/", "node_modules/" },
       },
     })
   end,

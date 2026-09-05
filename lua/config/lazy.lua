@@ -15,20 +15,19 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
 
--- Certifique-se de configurar `mapleader` e `maplocalleader` antes
--- de carregar o lazy.nvim para que os mapeamentos fiquem corretos.
--- Este também é um bom lugar para definir outras configurações (vim.opt)
-
+-- Configure leaders before lazy.nvim loads plugin specs.
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Carregar plugins da pasta "plugins/"
-require("lazy").setup("plugins", {
-  ui = { 
+-- Import plugin specifications from lua/plugins/**.
+-- The directory intentionally has no lua/plugins/init.lua; lazy.nvim's
+-- import mechanism discovers the individual spec files and subdirectories.
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
+  },
+  ui = {
     border = "rounded",
     icons = {
       cmd = "⌘",
@@ -42,19 +41,13 @@ require("lazy").setup("plugins", {
       source = "📄",
       start = "🚀",
       task = "📌",
-      lazy = "💤 ",
+      lazy = "💤",
     },
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-
-  -- Configure quaisquer outras configurações aqui. Consulte a documentação para mais detalhes.
-  -- esquema de cores que será usado ao instalar plugins.
-  install = { 
-    colorscheme = { "tokyonight" } 
+  install = {
+    colorscheme = { "tokyonight" },
   },
-  -- automatically check for plugin updates
-  -- verificar automaticamente se há atualizações de plugins
-  checker = { enabled = true },
+  checker = {
+    enabled = true,
+  },
 })
-

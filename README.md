@@ -77,27 +77,28 @@ Abra o Neovim e deixe o `lazy.nvim` instalar os plugins.
 
 Para manter a instalação inicial enxuta, o padrão usa um perfil **core**.
 
-LSP completo:
+Defina as variáveis em `lua/config/options.lua`, antes do carregamento dos plugins, para usar o perfil completo:
 
 ```lua
 vim.g.nvim_fusion_lsp_profile = "full"
-```
-
-Treesitter completo:
-
-```lua
 vim.g.nvim_fusion_treesitter_profile = "full"
 ```
 
-Essas variáveis devem ser definidas antes do carregamento dos plugins, se você quiser os perfis completos.
-
 ## Reprodutibilidade
 
-O bootstrap do `lazy.nvim` usa um commit imutável, evitando depender do estado mutável da branch `stable` no primeiro clone. O restante dos plugins é gerenciado pelo `lazy.nvim`; depois da primeira sincronização, **mantenha o `lazy-lock.json` gerado pelo `:Lazy sync` versionado no repositório** para congelar os commits exatos do ambiente.
+O bootstrap do `lazy.nvim` usa um commit imutável, evitando depender do estado mutável da branch `stable` no primeiro clone. Para congelar também os plugins, execute `:Lazy sync` em uma instalação limpa e **versione o `lazy-lock.json` gerado**.
+
+O arquivo de lock deve ser atualizado intencionalmente quando você decidir atualizar plugins; não remova o lockfile de uma instalação de produção/desenvolvimento reproduzível.
 
 ## Performance
 
-O benchmark é opcional e usa APIs públicas do Neovim/lazy.nvim. Comandos disponíveis:
+O benchmark foi mantido como módulo opcional e usa APIs públicas do Neovim e do `lazy.nvim`. Para habilitá-lo manualmente, execute:
+
+```vim
+:lua require("config.benchmark").setup()
+```
+
+Depois disso, os comandos disponíveis são:
 
 - `:BenchmarkAll`
 - `:BenchmarkStats`
@@ -128,3 +129,21 @@ O `updatetime` padrão é 200ms para reduzir disparos excessivos de `CursorHold`
 │       └── ui/
 └── README.md
 ```
+
+## Verificação
+
+Após instalar, execute:
+
+```bash
+nvim --version
+```
+
+Dentro do Neovim:
+
+```vim
+:checkhealth
+:Lazy
+:Mason
+```
+
+A branch também possui um smoke test headless em `.github/workflows/neovim-config.yml` para validar o carregamento com Neovim 0.12.2.

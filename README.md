@@ -1,34 +1,90 @@
-# Nvim-Fusion
+# ⚡ Nvim-Fusion
 
-Configuração modular do Neovim, organizada por responsabilidade e preparada para Neovim moderno.
+> Uma configuração moderna, modular e performática para transformar o **Neovim** em um ambiente completo de desenvolvimento.
 
-## Requisitos
+[![Neovim](https://img.shields.io/badge/Neovim-0.12%2B-57A143?style=flat-square&logo=neovim)](https://neovim.io/)
+[![Lua](https://img.shields.io/badge/Lua-5.1%2B-2C2D72?style=flat-square&logo=lua)](https://www.lua.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Plugins](https://img.shields.io/badge/plugins-Lazy.nvim-orange?style=flat-square)](https://github.com/folke/lazy.nvim)
 
-- **Neovim 0.12+** — a branch atual usa a reescrita `main` do nvim-treesitter.
-- **Git** — para bootstrap do lazy.nvim e instalação dos plugins.
-- **tree-sitter-cli 0.26.1+** — necessário para os parsers do nvim-treesitter atual.
-- **Compilador C** — necessário para compilar parsers quando aplicável.
-- **curl** e **tar** — usados pelo fluxo atual do nvim-treesitter.
-- **Nerd Font** — recomendado para os ícones da interface.
-- **ripgrep** e **fd** — recomendados para aproveitar melhor o Telescope.
+## ✨ Sobre o projeto
 
-> Os servidores LSP são gerenciados pelo Mason. Algumas linguagens também exigem runtimes externos, como Node.js, Python, Rust ou Java.
+O **Nvim-Fusion** é uma configuração modular do Neovim focada em produtividade, desenvolvimento e facilidade de manutenção.
 
-## Instalação
+A configuração separa responsabilidades entre `config/` e `plugins/`, utiliza carregamento sob demanda quando apropriado e adota APIs modernas do ecossistema Neovim.
 
-Faça backup da configuração existente antes de instalar.
+### Destaques
+
+- 🧩 Arquitetura modular e fácil de manter
+- ⚡ Lazy loading com **lazy.nvim**
+- 🧠 LSP + completion + snippets
+- 🌳 Treesitter para parsing e syntax highlighting
+- 🔧 Mason para instalação de ferramentas
+- 🔎 Telescope para busca rápida
+- 🌿 Gitsigns para integração com Git
+- 🚨 Trouble para diagnósticos e símbolos
+- 🎨 TokyoNight + Lualine + Bufferline + Alpha
+- 📁 NvimTree como explorador de arquivos
+- ⌨️ Which-Key para descoberta de atalhos
+- 🛡️ Configuração com foco em segurança e previsibilidade
+
+---
+
+## 📋 Requisitos
+
+A versão atual da configuração acompanha APIs modernas e requer:
+
+- **Neovim 0.12+**
+- **Git**
+- **tree-sitter-cli 0.26.1+**
+- **Compilador C** (GCC ou Clang)
+- **curl** e **tar**
+- **Nerd Font** — recomendado para os ícones
+- **ripgrep** e **fd** — recomendados para o Telescope
+
+Alguns servidores LSP também precisam de runtimes específicos, como Node.js, Python, Rust ou Java.
+
+> **Importante:** o `nvim-treesitter` usado nesta branch segue a arquitetura atual. Se você estiver usando Neovim 0.11 ou anterior, atualize o Neovim antes de instalar esta configuração.
+
+---
+
+## 🚀 Instalação
+
+### 1. Faça backup da configuração atual
 
 ```bash
-git clone <URL-DO-REPOSITORIO> ~/.config/nvim
+mv ~/.config/nvim ~/.config/nvim.backup 2>/dev/null || true
+```
+
+### 2. Clone o projeto
+
+```bash
+git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
+```
+
+### 3. Inicie o Neovim
+
+```bash
 nvim
 ```
 
-Na primeira inicialização, o lazy.nvim será instalado automaticamente e os plugins serão sincronizados conforme a configuração.
+O `lazy.nvim` será instalado automaticamente e os plugins serão preparados na primeira inicialização.
 
-## Estrutura
+### Atualização
+
+Dentro do Neovim:
+
+```vim
+:Lazy sync
+:TSUpdate
+```
+
+---
+
+## 🗂️ Estrutura
 
 ```text
-.
+Nvim-Fusion/
 ├── init.lua
 ├── lua/
 │   ├── config/
@@ -38,6 +94,7 @@ Na primeira inicialização, o lazy.nvim será instalado automaticamente e os pl
 │   │   ├── keymaps.lua
 │   │   ├── lazy.lua
 │   │   └── options.lua
+│   │
 │   └── plugins/
 │       ├── completion/
 │       │   └── nvim-cmp.lua
@@ -60,103 +117,160 @@ Na primeira inicialização, o lazy.nvim será instalado automaticamente e os pl
 │           ├── indent-blankline.lua
 │           ├── lualine.lua
 │           └── tokyonight.lua
+│
 └── .gitignore
 ```
 
-## LSP
+---
 
-A configuração usa `nvim-lspconfig` com a API nativa moderna do Neovim (`vim.lsp.config`) e integração com Mason/Mason-LSPConfig.
+## 🧠 LSP
 
-Servidores configurados para instalação automática:
+O LSP usa a API moderna do Neovim e integração com **Mason** + **mason-lspconfig**.
 
-- Lua: `lua_ls`
-- Python: `pyright`
-- JavaScript/TypeScript: `ts_ls`
-- HTML: `html`
-- CSS: `cssls`
-- JSON: `jsonls`
-- YAML: `yamlls`
-- Bash: `bashls`
-- C/C++: `clangd`
-- Rust: `rust_analyzer`
-- Java: `jdtls`
+### Servidores configurados
 
-Atalhos LSP principais:
+| Linguagem | Server |
+|---|---|
+| Lua | `lua_ls` |
+| Python | `pyright` |
+| JavaScript / TypeScript | `ts_ls` |
+| HTML | `html` |
+| CSS | `cssls` |
+| JSON | `jsonls` |
+| YAML | `yamlls` |
+| Bash | `bashls` |
+| C / C++ | `clangd` |
+| Rust | `rust_analyzer` |
+| Java | `jdtls` |
+
+### Atalhos LSP
 
 | Atalho | Ação |
 |---|---|
-| `gd` | Definição |
-| `gD` | Declaração |
+| `gd` | Ir para definição |
+| `gD` | Ir para declaração |
 | `gi` | Implementação |
 | `gr` | Referências |
-| `K` | Hover |
+| `gt` | Definição de tipo |
+| `K` | Documentação / Hover |
 | `<C-k>` | Signature help |
-| `<leader>rn` | Renomear |
+| `<leader>rn` | Renomear símbolo |
 | `<leader>ca` | Code action |
 | `<leader>lf` | Formatar buffer |
-| `[d` / `]d` | Diagnóstico anterior/próximo |
+| `[d` / `]d` | Diagnóstico anterior / próximo |
+| `<leader>ld` | Mostrar diagnóstico |
 
-## Treesitter
+---
 
-A configuração usa a arquitetura atual do nvim-treesitter, sem a API antiga `nvim-treesitter.configs`.
+## 🌳 Treesitter
 
-Os parsers são instalados por `require("nvim-treesitter").install(...)` e o highlighting é iniciado por buffer. Depois de atualizar o plugin, execute:
+A configuração utiliza a arquitetura atual do `nvim-treesitter`.
+
+Os parsers são instalados automaticamente através de:
+
+```lua
+require("nvim-treesitter").install(...)
+```
+
+Após atualizar o Treesitter, execute:
 
 ```vim
 :TSUpdate
 ```
 
-## Plugins principais
+---
 
-- **lazy.nvim** — gerenciador de plugins
-- **Mason + mason-lspconfig** — instalação e integração de ferramentas LSP
-- **nvim-lspconfig** — configurações dos servidores LSP
-- **nvim-cmp + LuaSnip** — completion e snippets
-- **nvim-treesitter** — parsing e highlighting
-- **Telescope** — busca fuzzy
-- **nvim-tree** — explorador de arquivos
-- **Trouble** — diagnósticos e símbolos
-- **Gitsigns** — integração visual com Git
-- **Lualine + Bufferline + Alpha** — interface
-- **TokyoNight** — tema
-- **Which-Key** — descoberta de atalhos
-- **nvim-colorizer** — visualização de cores
-- **indent-blankline** — guias de indentação
-- **nvim-autopairs** — fechamento automático de pares
+## 🔌 Plugins
 
-## Atalhos gerais
+### Core
 
-- `<leader>pv` — abrir netrw
-- `<leader>fs` — salvar
-- `<leader>qq` — sair da janela
-- `<C-h/j/k/l>` — navegar entre janelas
-- `<leader>e` — alternar nvim-tree
-- `<leader>o` — focar nvim-tree
-- `<leader>nf` — localizar arquivo no nvim-tree
-- `<leader>ff` — encontrar arquivos
-- `<leader>fg` — busca por texto
-- `<leader>fb` — buffers
-- `<leader>fh` — ajuda
-- `<leader>xx` — Trouble/diagnósticos
+- [lazy.nvim](https://github.com/folke/lazy.nvim) — gerenciamento de plugins
+- [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) — configurações LSP
+- [mason.nvim](https://github.com/mason-org/mason.nvim) — instalação de ferramentas
+- [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) — integração Mason/LSP
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) — parsing
+- [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) — completion
+- [LuaSnip](https://github.com/L3MON4D3/LuaSnip) — snippets
 
-## Segurança e manutenção
+### Interface
 
-- Arquivos `.env` e temporários são ignorados pelo Git.
-- Não coloque tokens, senhas, chaves privadas ou credenciais na configuração.
-- A configuração não executa comandos shell derivados de entrada do usuário.
-- O explorador de arquivos foi consolidado em **nvim-tree** para evitar manter dois plugins com a mesma finalidade.
-- A configuração evita a API legada `require("lspconfig")`.
+- [tokyonight.nvim](https://github.com/folke/tokyonight.nvim)
+- [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+- [bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
+- [alpha-nvim](https://github.com/goolord/alpha-nvim)
+- [which-key.nvim](https://github.com/folke/which-key.nvim)
+- [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)
 
-## Verificação
+### Ferramentas
 
-No ambiente local, depois de instalar os requisitos:
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim)
+- [NvimTree](https://github.com/nvim-tree/nvim-tree.lua)
+- [Trouble](https://github.com/folke/trouble.nvim)
+- [Gitsigns](https://github.com/lewis6991/gitsigns.nvim)
+- [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+- [nvim-colorizer](https://github.com/NvChad/nvim-colorizer.lua)
+- [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim)
+
+---
+
+## ⌨️ Atalhos principais
+
+| Atalho | Ação |
+|---|---|
+| `<leader>pv` | Abrir explorador/netrw |
+| `<leader>fs` | Salvar arquivo |
+| `<leader>qq` | Fechar janela |
+| `<C-h>` | Janela à esquerda |
+| `<C-j>` | Janela abaixo |
+| `<C-k>` | Janela acima |
+| `<C-l>` | Janela à direita |
+| `<leader>e` | Alternar NvimTree |
+| `<leader>o` | Focar NvimTree |
+| `<leader>nf` | Localizar arquivo no NvimTree |
+| `<leader>ff` | Encontrar arquivos |
+| `<leader>fg` | Buscar texto |
+| `<leader>fb` | Listar buffers |
+| `<leader>fh` | Ajuda |
+| `<leader>xx` | Diagnósticos no Trouble |
+| `<leader>xX` | Diagnósticos do buffer |
+
+---
+
+## ⚡ Performance
+
+A configuração utiliza carregamento sob demanda para reduzir trabalho durante o startup quando isso é seguro.
+
+Para medir a configuração:
+
+```vim
+:NvimBenchmark
+:NvimBenchmarkPlugins
+:NvimBenchmarkMemory
+```
+
+> Os números de startup e memória dependem do hardware, sistema operacional, versão do Neovim e plugins instalados. O projeto não apresenta métricas fixas como garantia de performance.
+
+---
+
+## 🛡️ Segurança e boas práticas
+
+- `.env`, arquivos temporários e artefatos locais não devem ser versionados.
+- Nunca armazene tokens, senhas, chaves privadas ou credenciais no repositório.
+- Ferramentas externas devem ser instaladas e atualizadas conscientemente.
+- A configuração evita APIs legadas conhecidas onde já existe alternativa moderna.
+- Plugins duplicados com a mesma finalidade foram removidos para reduzir superfície de manutenção.
+
+---
+
+## 🧪 Verificação
+
+Depois da instalação, execute:
 
 ```bash
 nvim --version
-nvim --clean
 ```
 
-E, com a configuração carregada:
+E dentro do Neovim:
 
 ```vim
 :checkhealth
@@ -165,8 +279,31 @@ E, com a configuração carregada:
 :Mason
 ```
 
-> Esta auditoria foi feita estaticamente no repositório. O ambiente desta sessão não permitiu executar o Neovim e seus plugins, portanto ainda é necessário fazer a validação runtime local com `:checkhealth` e uma inicialização real.
+Se algo falhar, verifique primeiro se todos os requisitos do sistema estão instalados.
 
-## Licença
+---
 
-MIT.
+## 🤝 Contribuição
+
+Sugestões, correções e melhorias são bem-vindas.
+
+Antes de enviar alterações:
+
+1. mantenha a organização modular;
+2. evite APIs depreciadas;
+3. não adicione credenciais ou arquivos locais;
+4. teste a configuração em uma instalação limpa quando possível.
+
+---
+
+## 📄 Licença
+
+Este projeto está disponível sob a licença **MIT**.
+
+---
+
+<div align="center">
+
+**Nvim-Fusion** · Neovim moderno · Modular · Produtivo
+
+</div>

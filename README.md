@@ -48,7 +48,7 @@ Alguns servidores LSP também exigem runtimes específicos, como Node.js, Python
 
 ---
 
-## 🐧 Instalação do Neovim no Linux
+## 💻 Instalação do Neovim
 
 O Nvim-Fusion foi preparado para **Neovim 0.12+**. Antes de instalar a configuração, confirme a versão com:
 
@@ -56,102 +56,58 @@ O Nvim-Fusion foi preparado para **Neovim 0.12+**. Antes de instalar a configura
 nvim --version
 ```
 
-Se o comando não existir ou a versão for antiga, escolha o método correspondente à sua distribuição.
-
-### Ubuntu / Debian
+### 🐧 Debian / Ubuntu
 
 ```bash
 sudo apt update
 sudo apt install neovim git curl tar build-essential
 ```
 
-Para suporte ao provider Python:
+> Em versões antigas do Debian/Ubuntu, o repositório pode oferecer uma versão abaixo de 0.12. Nesse caso, use o pacote oficial pré-compilado ou o AppImage abaixo.
 
-```bash
-sudo apt install python3-neovim
-```
-
-> **Nota:** em versões antigas do Ubuntu/Debian, o pacote oficial pode disponibilizar uma versão de Neovim abaixo de 0.12. Nesse caso, use o pacote pré-compilado oficial ou o AppImage descrito abaixo.
-
-### Fedora / RHEL / derivados
-
-Fedora:
-
-```bash
-sudo dnf install -y neovim git curl tar gcc make
-```
-
-No RHEL/CentOS, caso `neovim` não esteja disponível no repositório habilitado, considere o EPEL ou utilize o pacote pré-compilado oficial.
-
-### Arch Linux / Manjaro / derivados
+### 🐧 Arch Linux / Manjaro
 
 ```bash
 sudo pacman -Syu neovim git curl tar base-devel
 ```
 
-Para o provider Python:
+### 🍎 macOS
+
+Com Homebrew:
 
 ```bash
-sudo pacman -S python-pynvim
+brew install neovim git
 ```
 
-### openSUSE
+Se ainda não tiver o Homebrew instalado, instale-o pelo site oficial do Homebrew antes de executar o comando acima.
 
-```bash
-sudo zypper install neovim git curl tar gcc-c++
+### 🪟 Windows
+
+Com **winget**:
+
+```powershell
+winget install Neovim.Neovim
 ```
 
-### Alpine Linux
+Com **Scoop**:
 
-```bash
-sudo apk add neovim git curl tar build-base
+```powershell
+scoop install neovim
 ```
 
-### Void Linux
+Depois, abra um novo terminal e confirme:
 
-```bash
-sudo xbps-install -S neovim git curl tar base-devel
+```powershell
+nvim --version
 ```
 
-### Gentoo
-
-```bash
-sudo emerge --ask app-editors/neovim
-```
-
-### Nix / NixOS
-
-Com Nix:
-
-```bash
-nix profile install nixpkgs#neovim
-```
-
-### Solus
-
-```bash
-sudo eopkg install neovim git curl tar
-```
-
-### Snap — alternativa para várias distribuições
-
-```bash
-sudo snap install nvim --classic
-```
-
-### Flatpak — alternativa
-
-```bash
-flatpak install flathub io.neovim.nvim
-```
-
-> **Atenção:** o Neovim instalado via Flatpak utiliza caminhos de configuração diferentes do padrão do sistema. Para esta configuração, o pacote nativo ou o pacote pré-compilado oficial é geralmente mais simples.
+> **Importante:** o Nvim-Fusion utiliza `~/.config/nvim` no Linux/macOS. No Windows, a configuração do Neovim normalmente fica em `%LOCALAPPDATA%\nvim`.
 
 ---
 
 ## 📦 Instalação universal — pacote oficial do Neovim
 
-Se a sua distribuição não oferece **Neovim 0.12+** pelo gerenciador de pacotes, esta é uma opção recomendada.
+Se sua distribuição Linux não oferece **Neovim 0.12+**, use o pacote oficial pré-compilado ou o AppImage.
 
 Para Linux x86_64:
 
@@ -159,52 +115,35 @@ Para Linux x86_64:
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 sudo rm -rf /opt/nvim-linux-x86_64
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-```
-
-Adicione ao `PATH`:
-
-```bash
 echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
 source ~/.bashrc
-```
-
-Depois confira:
-
-```bash
 nvim --version
 ```
 
-Para sistemas Linux ARM64, utilize o pacote `nvim-linux-arm64.tar.gz` correspondente à arquitetura disponível na página oficial de releases.
+Para Linux ARM64, utilize o arquivo `nvim-linux-arm64.tar.gz` correspondente à arquitetura.
 
 ### AppImage
-
-Outra opção independente da distribuição é o AppImage:
 
 ```bash
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
 chmod u+x nvim-linux-x86_64.appimage
 sudo mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
-```
-
-Teste:
-
-```bash
 nvim --version
 ```
-
-> Se o AppImage não executar, pode ser necessário instalar suporte ao FUSE ou utilizar o pacote `.tar.gz` oficial.
 
 ---
 
 ## 🚀 Instalação do Nvim-Fusion
 
-### 1. Faça backup da configuração atual
+### Linux / macOS
+
+#### 1. Faça backup da configuração atual
 
 ```bash
 mv ~/.config/nvim ~/.config/nvim.backup 2>/dev/null || true
 ```
 
-### 2. Clone o projeto
+#### 2. Clone o projeto
 
 ```bash
 git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
@@ -212,11 +151,20 @@ cd ~/.config/nvim
 git checkout xzguuhxz
 ```
 
-> Se o repositório já estiver clonado, use `git fetch` e depois `git switch xzguuhxz` para acessar esta branch.
-
-### 3. Inicie o Neovim
+#### 3. Inicie o Neovim
 
 ```bash
+nvim
+```
+
+### Windows
+
+No PowerShell:
+
+```powershell
+git clone https://github.com/XzGuuhXz/Nvim-Fusion.git "$env:LOCALAPPDATA\nvim"
+cd "$env:LOCALAPPDATA\nvim"
+git checkout xzguuhxz
 nvim
 ```
 
@@ -455,12 +403,4 @@ Antes de enviar alterações:
 
 ## 📄 Licença
 
-Este projeto está disponível sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para mais informações.
-
----
-
-<div align="center">
-
-**Nvim-Fusion** · Neovim moderno · Modular · Produtivo
-
-</div>
+Este projeto está disponível sob a licença MIT.

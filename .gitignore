@@ -1,0 +1,15 @@
+# Neovim temporary files
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local secrets / environment files
+.env
+.env.*
+!.env.example

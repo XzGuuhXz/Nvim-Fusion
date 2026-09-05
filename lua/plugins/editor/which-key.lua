@@ -24,11 +24,6 @@ return {
       { "<leader>f", group = "Find" },
       { "<leader>g", group = "Git" },
       { "<leader>l", group = "LSP" },
-      { "<leader>t", group = "Terminal" },
-      { "<leader>w", group = "Window" },
-      { "<leader>b", group = "Buffer" },
-      { "<leader>d", group = "Debug" },
-      { "<leader>s", group = "Session" },
       { "<leader>n", group = "NvimTree" },
     })
   end,

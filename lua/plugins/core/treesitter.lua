@@ -3,7 +3,7 @@ return {
   lazy = false,
   build = ":TSUpdate",
   dependencies = {
-    "nvim-treesitter/treesitter-parser-registry",
+    "neovim-treesitter/treesitter-parser-registry",
   },
   config = function()
     local treesitter = require("nvim-treesitter")

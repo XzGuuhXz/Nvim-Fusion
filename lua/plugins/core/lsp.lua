@@ -43,20 +43,6 @@ return {
     config = function(_, opts)
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      vim.diagnostic.config({
-        virtual_text = { prefix = "●" },
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-        float = {
-          border = "rounded",
-          source = "always",
-          header = "",
-          prefix = "",
-        },
-      })
-
       local on_attach = function(client, bufnr)
         local map = function(mode, lhs, rhs, desc)
           vim.keymap.set(mode, lhs, rhs, {

@@ -15,36 +15,36 @@ A configuração separa responsabilidades entre `config/` e `plugins/`, utiliza 
 
 ### Destaques
 
-- 🧩 Arquitetura modular e fácil de manter
+- 🧩 Arquitetura modular e organizada
 - ⚡ Lazy loading com **lazy.nvim**
-- 🧠 LSP + completion + snippets
+- 🧠 LSP, completion e snippets
 - 🌳 Treesitter para parsing e syntax highlighting
-- 🔧 Mason para instalação de ferramentas
-- 🔎 Telescope para busca rápida
+- 🔧 Mason para instalação e gerenciamento de ferramentas
+- 🔎 Telescope para busca e navegação
 - 🌿 Gitsigns para integração com Git
 - 🚨 Trouble para diagnósticos e símbolos
 - 🎨 TokyoNight + Lualine + Bufferline + Alpha
 - 📁 NvimTree como explorador de arquivos
 - ⌨️ Which-Key para descoberta de atalhos
-- 🛡️ Configuração com foco em segurança e previsibilidade
+- 🛡️ Configuração com foco em segurança, previsibilidade e manutenção
 
 ---
 
 ## 📋 Requisitos
 
-A versão atual da configuração acompanha APIs modernas e requer:
+A configuração desta branch acompanha APIs modernas e requer:
 
 - **Neovim 0.12+**
 - **Git**
 - **tree-sitter-cli 0.26.1+**
-- **Compilador C** (GCC ou Clang)
+- **Compilador C** — GCC ou Clang
 - **curl** e **tar**
 - **Nerd Font** — recomendado para os ícones
 - **ripgrep** e **fd** — recomendados para o Telescope
 
-Alguns servidores LSP também precisam de runtimes específicos, como Node.js, Python, Rust ou Java.
+Alguns servidores LSP também exigem runtimes específicos, como Node.js, Python, Rust ou Java.
 
-> **Importante:** o `nvim-treesitter` usado nesta branch segue a arquitetura atual. Se você estiver usando Neovim 0.11 ou anterior, atualize o Neovim antes de instalar esta configuração.
+> **Importante:** o `nvim-treesitter` desta branch segue a arquitetura atual. Se você estiver usando Neovim 0.11 ou anterior, atualize o Neovim antes de instalar esta configuração.
 
 ---
 
@@ -60,7 +60,11 @@ mv ~/.config/nvim ~/.config/nvim.backup 2>/dev/null || true
 
 ```bash
 git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
+cd ~/.config/nvim
+git checkout xzguuhxz
 ```
+
+> Se o repositório já estiver clonado, use `git fetch` e depois `git switch xzguuhxz` para acessar esta branch.
 
 ### 3. Inicie o Neovim
 
@@ -68,7 +72,7 @@ git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
 nvim
 ```
 
-O `lazy.nvim` será instalado automaticamente e os plugins serão preparados na primeira inicialização.
+Na primeira inicialização, o `lazy.nvim` será preparado e os plugins serão carregados conforme a configuração.
 
 ### Atualização
 
@@ -81,7 +85,7 @@ Dentro do Neovim:
 
 ---
 
-## 🗂️ Estrutura
+## 🗂️ Estrutura do projeto
 
 ```text
 Nvim-Fusion/
@@ -118,14 +122,17 @@ Nvim-Fusion/
 │           ├── lualine.lua
 │           └── tokyonight.lua
 │
+├── LICENSE
 └── .gitignore
 ```
+
+A organização mantém configurações gerais em `lua/config/` e configurações de plugins em `lua/plugins/`, separadas por responsabilidade.
 
 ---
 
 ## 🧠 LSP
 
-O LSP usa a API moderna do Neovim e integração com **Mason** + **mason-lspconfig**.
+O LSP utiliza a API moderna do Neovim em conjunto com **Mason** e **mason-lspconfig**.
 
 ### Servidores configurados
 
@@ -149,9 +156,9 @@ O LSP usa a API moderna do Neovim e integração com **Mason** + **mason-lspconf
 |---|---|
 | `gd` | Ir para definição |
 | `gD` | Ir para declaração |
-| `gi` | Implementação |
-| `gr` | Referências |
-| `gt` | Definição de tipo |
+| `gi` | Ir para implementação |
+| `gr` | Mostrar referências |
+| `gt` | Ir para definição de tipo |
 | `K` | Documentação / Hover |
 | `<C-k>` | Signature help |
 | `<leader>rn` | Renomear símbolo |
@@ -166,7 +173,7 @@ O LSP usa a API moderna do Neovim e integração com **Mason** + **mason-lspconf
 
 A configuração utiliza a arquitetura atual do `nvim-treesitter`.
 
-Os parsers são instalados automaticamente através de:
+Os parsers são instalados pela configuração usando a API atual:
 
 ```lua
 require("nvim-treesitter").install(...)
@@ -194,22 +201,22 @@ Após atualizar o Treesitter, execute:
 
 ### Interface
 
-- [tokyonight.nvim](https://github.com/folke/tokyonight.nvim)
-- [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-- [bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
-- [alpha-nvim](https://github.com/goolord/alpha-nvim)
-- [which-key.nvim](https://github.com/folke/which-key.nvim)
-- [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)
+- [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) — tema
+- [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) — statusline
+- [bufferline.nvim](https://github.com/akinsho/bufferline.nvim) — buffers
+- [alpha-nvim](https://github.com/goolord/alpha-nvim) — dashboard
+- [which-key.nvim](https://github.com/folke/which-key.nvim) — atalhos
+- [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) — ícones
 
 ### Ferramentas
 
-- [Telescope](https://github.com/nvim-telescope/telescope.nvim)
-- [NvimTree](https://github.com/nvim-tree/nvim-tree.lua)
-- [Trouble](https://github.com/folke/trouble.nvim)
-- [Gitsigns](https://github.com/lewis6991/gitsigns.nvim)
-- [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
-- [nvim-colorizer](https://github.com/NvChad/nvim-colorizer.lua)
-- [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim)
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim) — busca e navegação
+- [NvimTree](https://github.com/nvim-tree/nvim-tree.lua) — explorador de arquivos
+- [Trouble](https://github.com/folke/trouble.nvim) — diagnósticos e símbolos
+- [Gitsigns](https://github.com/lewis6991/gitsigns.nvim) — integração com Git
+- [nvim-autopairs](https://github.com/windwp/nvim-autopairs) — fechamento automático
+- [nvim-colorizer](https://github.com/NvChad/nvim-colorizer.lua) — visualização de cores
+- [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim) — guias de indentação
 
 ---
 
@@ -217,7 +224,7 @@ Após atualizar o Treesitter, execute:
 
 | Atalho | Ação |
 |---|---|
-| `<leader>pv` | Abrir explorador/netrw |
+| `<leader>pv` | Abrir explorador / netrw |
 | `<leader>fs` | Salvar arquivo |
 | `<leader>qq` | Fechar janela |
 | `<C-h>` | Janela à esquerda |
@@ -230,7 +237,7 @@ Após atualizar o Treesitter, execute:
 | `<leader>ff` | Encontrar arquivos |
 | `<leader>fg` | Buscar texto |
 | `<leader>fb` | Listar buffers |
-| `<leader>fh` | Ajuda |
+| `<leader>fh` | Abrir ajuda |
 | `<leader>xx` | Diagnósticos no Trouble |
 | `<leader>xX` | Diagnósticos do buffer |
 
@@ -240,7 +247,7 @@ Após atualizar o Treesitter, execute:
 
 A configuração utiliza carregamento sob demanda para reduzir trabalho durante o startup quando isso é seguro.
 
-Para medir a configuração:
+Para analisar a configuração:
 
 ```vim
 :NvimBenchmark
@@ -248,7 +255,7 @@ Para medir a configuração:
 :NvimBenchmarkMemory
 ```
 
-> Os números de startup e memória dependem do hardware, sistema operacional, versão do Neovim e plugins instalados. O projeto não apresenta métricas fixas como garantia de performance.
+> Os resultados dependem do hardware, sistema operacional, versão do Neovim e plugins instalados. As métricas não devem ser interpretadas como garantia fixa de performance.
 
 ---
 
@@ -256,21 +263,22 @@ Para medir a configuração:
 
 - `.env`, arquivos temporários e artefatos locais não devem ser versionados.
 - Nunca armazene tokens, senhas, chaves privadas ou credenciais no repositório.
-- Ferramentas externas devem ser instaladas e atualizadas conscientemente.
-- A configuração evita APIs legadas conhecidas onde já existe alternativa moderna.
-- Plugins duplicados com a mesma finalidade foram removidos para reduzir superfície de manutenção.
+- Instale e atualize ferramentas externas conscientemente.
+- Prefira APIs modernas e evite APIs depreciadas.
+- Evite plugins duplicados com a mesma finalidade para reduzir a superfície de manutenção.
+- Revise plugins e executáveis externos antes de confiar neles em um ambiente de desenvolvimento.
 
 ---
 
 ## 🧪 Verificação
 
-Depois da instalação, execute:
+Depois da instalação, confira a versão do Neovim:
 
 ```bash
 nvim --version
 ```
 
-E dentro do Neovim:
+Dentro do Neovim, execute:
 
 ```vim
 :checkhealth
@@ -279,7 +287,7 @@ E dentro do Neovim:
 :Mason
 ```
 
-Se algo falhar, verifique primeiro se todos os requisitos do sistema estão instalados.
+Se algo falhar, verifique primeiro os requisitos do sistema e as mensagens apresentadas pelo `:checkhealth`.
 
 ---
 
@@ -292,13 +300,14 @@ Antes de enviar alterações:
 1. mantenha a organização modular;
 2. evite APIs depreciadas;
 3. não adicione credenciais ou arquivos locais;
-4. teste a configuração em uma instalação limpa quando possível.
+4. teste a configuração em uma instalação limpa quando possível;
+5. mantenha o README sincronizado com mudanças relevantes na configuração.
 
 ---
 
 ## 📄 Licença
 
-Este projeto está disponível sob a licença **MIT**.
+Este projeto está disponível sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para mais informações.
 
 ---
 

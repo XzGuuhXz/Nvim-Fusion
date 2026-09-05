@@ -24,22 +24,20 @@ return {
       "neovim/nvim-lspconfig",
       "hrsh7th/cmp-nvim-lsp",
     },
-    opts = {
-      ensure_installed = {
-        "lua_ls",
-        "pyright",
-        "ts_ls",
-        "html",
-        "cssls",
-        "jsonls",
-        "yamlls",
-        "bashls",
-        "clangd",
-        "rust_analyzer",
-        "jdtls",
-      },
-      automatic_enable = true,
-    },
+    opts = function()
+      local profiles = {
+        core = { "lua_ls", "pyright", "ts_ls", "clangd" },
+        full = {
+          "lua_ls", "pyright", "ts_ls", "html", "cssls", "jsonls",
+          "yamlls", "bashls", "clangd", "rust_analyzer", "jdtls",
+        },
+      }
+      local profile = vim.g.nvim_fusion_lsp_profile or "core"
+      return {
+        ensure_installed = profiles[profile] or profiles.core,
+        automatic_enable = true,
+      }
+    end,
     config = function(_, opts)
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -58,7 +56,7 @@ return {
         map("n", "gr", vim.lsp.buf.references, "LSP: References")
         map("n", "gt", vim.lsp.buf.type_definition, "LSP: Type definition")
         map("n", "K", vim.lsp.buf.hover, "LSP: Hover")
-        map("n", "<C-k>", vim.lsp.buf.signature_help, "LSP: Signature help")
+        map("n", "<leader>lk", vim.lsp.buf.signature_help, "LSP: Signature help")
         map("n", "<leader>rn", vim.lsp.buf.rename, "LSP: Rename")
         map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "LSP: Code action")
         map("n", "<leader>lf", function()
@@ -105,60 +103,22 @@ return {
         },
       })
 
-      vim.lsp.config("pyright", {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = {
-          python = {
-            analysis = {
-              autoSearchPaths = true,
-              diagnosticMode = "workspace",
-              useLibraryCodeForTypes = true,
-            },
-          },
-        },
-      })
-
-      vim.lsp.config("ts_ls", {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = {
-          typescript = {
-            inlayHints = {
-              includeInlayParameterNameHints = "all",
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
-            },
-          },
-          javascript = {
-            inlayHints = {
-              includeInlayParameterNameHints = "all",
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
-            },
-          },
-        },
-      })
-
+      vim.lsp.config("pyright", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("ts_ls", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("html", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("cssls", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("jsonls", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("yamlls", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("bashls", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("rust_analyzer", { capabilities = capabilities, on_attach = on_attach })
+      vim.lsp.config("jdtls", { capabilities = capabilities, on_attach = on_attach })
       vim.lsp.config("clangd", {
         capabilities = capabilities,
         on_attach = on_attach,
         cmd = {
-          "clangd",
-          "--background-index",
-          "--clang-tidy",
-          "--header-insertion=iwyu",
-          "--completion-style=detailed",
-          "--function-arg-placeholders",
-          "--fallback-style=llvm",
+          "clangd", "--background-index", "--clang-tidy",
+          "--header-insertion=iwyu", "--completion-style=detailed",
+          "--function-arg-placeholders", "--fallback-style=llvm",
         },
       })
 

@@ -1,5 +1,4 @@
 -- Core keymaps
-vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree" })
 vim.keymap.set("n", "<leader>fs", "<cmd>write<cr>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>qq", "<cmd>quit<cr>", { desc = "Quit window" })
 

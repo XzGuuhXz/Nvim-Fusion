@@ -1,12 +1,13 @@
 return {
-  'nvim-telescope/telescope.nvim',
-  tag = '0.1.5',
+  "nvim-telescope/telescope.nvim",
+  tag = "0.1.8",
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons',
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons",
   },
+  cmd = "Telescope",
   config = function()
-    require('telescope').setup {
+    require("telescope").setup({
       defaults = {
         prompt_prefix = " 󰍉 ",
         selection_caret = " 󰅂 ",
@@ -23,13 +24,17 @@ return {
           height = 0.80,
           preview_cutoff = 120,
         },
+        file_ignore_patterns = {
+          "%.git/",
+          "node_modules/",
+        },
       },
-    }
-    
-    -- Keymaps
-    vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = '󰈞 Find files' })
-    vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { desc = '󰍉 Live grep' })
-    vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<cr>', { desc = '󰈚 List buffers' })
-    vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { desc = '󰋖 Help' })
-  end
+    })
+
+    local builtin = require("telescope.builtin")
+    vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "󰈞 Find files" })
+    vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "󰍉 Live grep" })
+    vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "󰈚 List buffers" })
+    vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "󰋖 Help" })
+  end,
 }

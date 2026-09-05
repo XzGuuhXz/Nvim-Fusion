@@ -1,8 +1,12 @@
 return {
   "NvChad/nvim-colorizer.lua",
   config = function()
-    require("colorizer").setup {
-      filetypes = { "*" },
+    require("colorizer").setup({
+      filetypes = {
+        "css", "scss", "html", "javascript", "javascriptreact",
+        "typescript", "typescriptreact", "vue", "svelte", "lua",
+        "vim", "json", "yaml", "toml", "markdown",
+      },
       user_default_options = {
         RGB = true,
         RRGGBB = true,
@@ -12,6 +16,6 @@ return {
         virtualtext = "■",
       },
       buftypes = {},
-    }
-  end
+    })
+  end,
 }

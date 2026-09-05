@@ -7,28 +7,20 @@ return {
   },
   config = function()
     local treesitter = require("nvim-treesitter")
-
-    local languages = {
-      "bash",
-      "c",
-      "cpp",
-      "css",
-      "go",
-      "html",
-      "java",
-      "javascript",
-      "json",
-      "lua",
-      "markdown",
-      "markdown_inline",
-      "python",
-      "query",
-      "rust",
-      "typescript",
-      "vim",
-      "vimdoc",
-      "yaml",
+    local profiles = {
+      core = {
+        "bash", "c", "cpp", "css", "html", "javascript", "json",
+        "lua", "markdown", "markdown_inline", "python", "query",
+        "rust", "typescript", "vim", "vimdoc", "yaml",
+      },
+      full = {
+        "bash", "c", "cpp", "css", "go", "html", "java", "javascript",
+        "json", "lua", "markdown", "markdown_inline", "python", "query",
+        "rust", "typescript", "vim", "vimdoc", "yaml",
+      },
     }
+    local profile = vim.g.nvim_fusion_treesitter_profile or "core"
+    local languages = profiles[profile] or profiles.core
 
     treesitter.setup({
       install_dir = vim.fn.stdpath("data") .. "/site",
@@ -49,11 +41,9 @@ return {
         end
 
         pcall(vim.treesitter.start)
-
         if vim.treesitter.query.get(lang, "indents") then
           vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end
-
         if vim.treesitter.query.get(lang, "folds") then
           vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
           vim.wo.foldmethod = "expr"
@@ -62,19 +52,13 @@ return {
     })
 
     vim.opt.foldenable = false
-
     vim.filetype.add({
-      extension = {
-        conf = "conf",
-        env = "dotenv",
-      },
+      extension = { conf = "conf", env = "dotenv" },
       filename = {
         [".env"] = "dotenv",
         ["tsconfig.json"] = "jsonc",
       },
-      pattern = {
-        ["%.env%.[%w_.-]+"] = "dotenv",
-      },
+      pattern = { ["%.env%.[%w_.-]+"] = "dotenv" },
     })
   end,
 }

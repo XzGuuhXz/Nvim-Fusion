@@ -20,6 +20,8 @@ local options = {
   updatetime = 50,
   colorcolumn = "0",
   clipboard = "unnamedplus",
+  -- Keep the global statusline visible.
+  laststatus = 3,
   -- Hide end-of-buffer tildes (~) from the left side of empty lines.
   fillchars = "eob: ",
 }

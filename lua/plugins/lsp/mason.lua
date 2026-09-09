@@ -14,6 +14,9 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("mason").setup(opts)
+    end,
   },
 
   {
@@ -35,5 +38,8 @@ return {
       -- O Nvim Fusion controla explicitamente a ativação com vim.lsp.enable().
       automatic_enable = false,
     },
+    config = function(_, opts)
+      require("mason-lspconfig").setup(opts)
+    end,
   },
 }

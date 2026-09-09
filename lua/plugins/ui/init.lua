@@ -1,6 +1,6 @@
 return {
   { import = "plugins.ui.lualine" },
-  { import = "plugins.ui.tokyonight" },
+  { import = "plugins.ui.nvim-fusion" },
   { import = "plugins.ui.bufferline" },
   { import = "plugins.ui.indent-blankline" },
   { import = "plugins.ui.colorizer" },

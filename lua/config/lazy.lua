@@ -40,7 +40,7 @@ require("lazy").setup("plugins", {
     },
   },
   install = {
-    colorscheme = { "tokyonight" },
+    colorscheme = { "nvim-fusion" },
   },
   checker = { enabled = true },
 })

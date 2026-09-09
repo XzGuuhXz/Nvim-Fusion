@@ -1,10 +1,6 @@
-return {
-  {
-    "nvim-fusion-theme",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme("nvim-fusion")
-    end,
-  },
-}
+-- NVIM FUSION custom colorscheme
+-- This is a local colorscheme, not a Lazy.nvim plugin.
+
+vim.cmd.colorscheme("nvim-fusion")
+
+return {}

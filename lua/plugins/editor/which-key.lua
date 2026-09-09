@@ -27,9 +27,7 @@ return {
         { "<leader>f", group = "󰈞 Find" },
         { "<leader>l", group = "󰌘 LSP" },
         { "<leader>g", group = "󰊢 Git" },
-        { "<leader>w", group = "󰖲 Window" },
         { "<leader>b", group = "󰈚 Buffer" },
-        { "<leader>d", group = "󰃤 Diagnostics" },
         { "<leader>c", group = "󰌌 Code" },
         { "<leader>pf", desc = "Find files" },
         { "<leader>ps", desc = "Search text" },
@@ -42,6 +40,8 @@ return {
         { "<leader>ls", desc = "Signature help" },
         { "<leader>rn", desc = "Rename symbol" },
         { "<leader>ca", desc = "Code actions" },
+        { "<leader>d", desc = "Show diagnostics" },
+        { "<leader>w", desc = "Save file" },
       })
     end,
   },

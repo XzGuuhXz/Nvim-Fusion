@@ -1,35 +1,41 @@
 return {
   -- Mason para gerenciar LSP servers
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     dependencies = {
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason-lspconfig.nvim",
     },
-    config = function()
-      require("mason").setup({
-        ui = { 
-          border = "rounded",
-          icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-          }
-        }
-      })
-      
-      require("mason-lspconfig").setup({
-        ensure_installed = { 
-          "lua_ls", 
-          "pyright", 
-          "ts_ls",  -- CORRIGIDO: usando o nome correto
-          "jsonls",
-          "html",
-          "cssls",
-          "clangd"
+    opts = {
+      ui = {
+        border = "rounded",
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗",
         },
-        automatic_installation = true,
-      })
-    end
+      },
+    },
+  },
+
+  -- Integração Mason <-> LSP
+  {
+    "mason-org/mason-lspconfig.nvim",
+    dependencies = {
+      "mason-org/mason.nvim",
+      "neovim/nvim-lspconfig",
+    },
+    opts = {
+      ensure_installed = {
+        "lua_ls",
+        "pyright",
+        "ts_ls",
+        "jsonls",
+        "html",
+        "cssls",
+        "clangd",
+      },
+      automatic_installation = true,
+    },
   },
 
   -- Autocompletion engine
@@ -47,10 +53,9 @@ return {
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-      
-      -- Carregar snippets
+
       require("luasnip.loaders.from_vscode").lazy_load()
-      
+
       cmp.setup({
         snippet = {
           expand = function(args)
@@ -62,12 +67,12 @@ return {
           documentation = cmp.config.window.bordered(),
         },
         mapping = cmp.mapping.preset.insert({
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({ select = true }),
-          ['<Tab>'] = cmp.mapping(function(fallback)
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -75,8 +80,8 @@ return {
             else
               fallback()
             end
-          end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping(function(fallback)
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -84,18 +89,17 @@ return {
             else
               fallback()
             end
-          end, { 'i', 's' }),
+          end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = 'nvim_lsp', priority = 1000 },
-          { name = 'luasnip', priority = 750 },
+          { name = "nvim_lsp", priority = 1000 },
+          { name = "luasnip", priority = 750 },
         }, {
-          { name = 'buffer', priority = 500 },
-          { name = 'path', priority = 250 },
+          { name = "buffer", priority = 500 },
+          { name = "path", priority = 250 },
         }),
         formatting = {
           format = function(entry, vim_item)
-            -- Adicionar fonte na descrição
             vim_item.menu = ({
               nvim_lsp = "[LSP]",
               luasnip = "[Snippet]",
@@ -103,55 +107,51 @@ return {
               path = "[Path]",
             })[entry.source.name]
             return vim_item
-          end
+          end,
         },
         experimental = {
           ghost_text = true,
         },
       })
-      
-      -- Completion para command line
-      cmp.setup.cmdline({ '/', '?' }, {
+
+      cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
-          { name = 'buffer' }
-        }
+          { name = "buffer" },
+        },
       })
-      
-      cmp.setup.cmdline(':', {
+
+      cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          { name = 'path' }
+          { name = "path" },
         }, {
-          { name = 'cmdline' }
-        })
+          { name = "cmdline" },
+        }),
       })
-    end
+    end,
   },
 
-  -- LSP Configuration
+  -- LSP Configuration - API nativa do Neovim 0.12
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
+      "mason-org/mason-lspconfig.nvim",
     },
     config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      
-      -- Evitar duplicação de capabilities
-      capabilities.textDocument.completion.completionItem.snippetSupport = true
-      
-      -- Lua LSP configurado para Neovim
-      require("lspconfig").lua_ls.setup({
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      vim.lsp.config("lua_ls", {
         capabilities = capabilities,
         settings = {
           Lua = {
             runtime = {
-              version = 'LuaJIT',
+              version = "LuaJIT",
             },
             diagnostics = {
               globals = { "vim" },
-              disable = { "missing-fields" }, -- Reduzir warnings desnecessários
+              disable = { "missing-fields" },
             },
             workspace = {
               library = vim.api.nvim_get_runtime_file("", true),
@@ -166,98 +166,94 @@ return {
           },
         },
       })
-      
-      -- Python LSP
-      require("lspconfig").pyright.setup({
+
+      vim.lsp.config("pyright", {
         capabilities = capabilities,
         settings = {
           python = {
             analysis = {
-              typeCheckingMode = "basic", -- Reduzir warnings excessivos
-            }
-          }
-        }
+              typeCheckingMode = "basic",
+            },
+          },
+        },
       })
-      
-      -- TypeScript LSP - CORRIGIDO
-      require("lspconfig").ts_ls.setup({
+
+      vim.lsp.config("ts_ls", {
         capabilities = capabilities,
         settings = {
           typescript = {
             inlayHints = {
-              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHints = "all",
               includeInlayParameterNameHintsWhenArgumentMatchesName = false,
               includeInlayFunctionParameterTypeHints = true,
               includeInlayVariableTypeHints = true,
               includeInlayPropertyDeclarationTypeHints = true,
               includeInlayFunctionLikeReturnTypeHints = true,
               includeInlayEnumMemberValueHints = true,
-            }
+            },
           },
           javascript = {
             inlayHints = {
-              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHints = "all",
               includeInlayParameterNameHintsWhenArgumentMatchesName = false,
               includeInlayFunctionParameterTypeHints = true,
               includeInlayVariableTypeHints = true,
               includeInlayPropertyDeclarationTypeHints = true,
               includeInlayFunctionLikeReturnTypeHints = true,
               includeInlayEnumMemberValueHints = true,
-            }
-          }
-        }
+            },
+          },
+        },
       })
-      
-      -- JSON LSP
-      require("lspconfig").jsonls.setup({
-        capabilities = capabilities,
-      })
-      
-      -- HTML LSP
-      require("lspconfig").html.setup({
-        capabilities = capabilities,
-      })
-      
-      -- CSS LSP
-      require("lspconfig").cssls.setup({
-        capabilities = capabilities,
-      })
-      
-      -- C/C++ LSP (clangd)
-      require("lspconfig").clangd.setup({
+
+      for _, server in ipairs({ "jsonls", "html", "cssls" }) do
+        vim.lsp.config(server, {
+          capabilities = capabilities,
+        })
+      end
+
+      vim.lsp.config("clangd", {
         capabilities = capabilities,
         cmd = { "clangd", "--background-index", "--clang-tidy" },
         filetypes = { "c", "cpp", "objc", "objcpp" },
         single_file_support = true,
       })
-      
-      -- LSP Keymaps - Evitar duplicação
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
+
+      vim.lsp.enable({
+        "lua_ls",
+        "pyright",
+        "ts_ls",
+        "jsonls",
+        "html",
+        "cssls",
+        "clangd",
+      })
+
+      local group = vim.api.nvim_create_augroup("NvimFusionLsp", { clear = true })
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = group,
         callback = function(ev)
           local opts = { buffer = ev.buf, silent = true }
-          
-          -- Navigation
-          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, vim.tbl_extend('force', opts, { desc = 'Go to declaration' }))
-          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, vim.tbl_extend('force', opts, { desc = 'Go to definition' }))
-          vim.keymap.set('n', 'K', vim.lsp.buf.hover, vim.tbl_extend('force', opts, { desc = 'Hover documentation' }))
-          vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, vim.tbl_extend('force', opts, { desc = 'Go to implementation' }))
-          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, vim.tbl_extend('force', opts, { desc = 'Signature help' }))
-          vim.keymap.set('n', 'gr', vim.lsp.buf.references, vim.tbl_extend('force', opts, { desc = 'Go to references' }))
-          
-          -- Actions
-          vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, vim.tbl_extend('force', opts, { desc = 'Rename symbol' }))
-          vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Code actions' }))
-          vim.keymap.set('n', '<leader>f', function()
-            vim.lsp.buf.format { async = true }
-          end, vim.tbl_extend('force', opts, { desc = 'Format code' }))
-          
-          -- Diagnostics
-          vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, vim.tbl_extend('force', opts, { desc = 'Previous diagnostic' }))
-          vim.keymap.set('n', ']d', vim.diagnostic.goto_next, vim.tbl_extend('force', opts, { desc = 'Next diagnostic' }))
-          vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, vim.tbl_extend('force', opts, { desc = 'Show diagnostic' }))
+
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+          vim.keymap.set("n", "<leader>ls", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
+
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+          vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code actions" }))
+          vim.keymap.set("n", "<leader>lf", function()
+            vim.lsp.buf.format({ async = true })
+          end, vim.tbl_extend("force", opts, { desc = "Format code" }))
+
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+          vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
         end,
       })
-    end
-  }
+    end,
+  },
 }

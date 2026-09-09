@@ -1,16 +1,16 @@
 -- NVIM FUSION // THEME TEST
--- Run inside the repository with:
+-- Compatibility-safe showcase for the NVIM FUSION v2 Neon Cyberpunk theme.
+--
+-- Run inside Neovim:
 --   :luafile tests/theme_test.lua
 --
--- Or from the shell:
+-- Or from the repository root:
 --   nvim -u init.lua +"luafile tests/theme_test.lua"
---
--- This showcase exercises the main highlight groups from the
--- NVIM FUSION v2 Neon Cyberpunk colorscheme.
 
 local api = vim.api
 
-vim.cmd("colorscheme nvim-fusion")
+-- Neovim 0.12+ exposes Ex commands through vim.cmd.<command>().
+vim.cmd.colorscheme("nvim-fusion")
 
 local lines = {
   "╭──────────────────────────────────────────────────────────────╮",
@@ -42,7 +42,7 @@ local lines = {
   "04  DIAGNOSTICS",
   "     ERROR    Something went wrong",
   "     WARNING  Check this configuration",
-  "     INFO     Neon fuchsia is the primary secondary accent",
+  "     INFO     Neon fuchsia is the secondary accent",
   "     HINT     Transparency depends on your terminal",
   "     OK       Theme loaded successfully",
   "",
@@ -86,7 +86,7 @@ vim.bo[buf].filetype = "lua"
 vim.bo[buf].modifiable = false
 vim.bo[buf].readonly = true
 
-vim.cmd("tabnew")
+vim.cmd.tabnew()
 local win = api.nvim_get_current_win()
 api.nvim_win_set_buf(win, buf)
 
@@ -108,7 +108,7 @@ mark(2, "WhichKeyGroup")
 mark(3, "Title")
 
 -- Section headings
-for row in { 5, 9, 17, 22, 29, 34, 39, 45 } do
+for _, row in ipairs({ 5, 9, 17, 22, 29, 34, 39, 45 }) do
   mark(row, "Title")
 end
 
@@ -156,7 +156,7 @@ mark(30, "GitSignsAdd", 0, 1)
 mark(31, "GitSignsChange", 0, 1)
 mark(32, "GitSignsDelete", 0, 1)
 
--- Completion/search
+-- Search / completion
 mark(35, "TelescopeMatching")
 mark(35, "CmpItemAbbrMatch")
 mark(35, "CmpItemKind")
@@ -183,14 +183,30 @@ for row, group in pairs(palette_groups) do
   mark(row, group, 0, -1)
 end
 
--- Add a few signs to verify the sign column and diagnostic colors.
+-- Diagnostic signs
 local ns = api.nvim_create_namespace("nvim_fusion_theme_test")
-api.nvim_buf_set_extmark(buf, ns, 24, 0, { sign_text = "E", sign_hl_group = "DiagnosticSignError" })
-api.nvim_buf_set_extmark(buf, ns, 25, 0, { sign_text = "W", sign_hl_group = "DiagnosticSignWarn" })
-api.nvim_buf_set_extmark(buf, ns, 26, 0, { sign_text = "I", sign_hl_group = "DiagnosticSignInfo" })
-api.nvim_buf_set_extmark(buf, ns, 27, 0, { sign_text = "H", sign_hl_group = "DiagnosticSignHint" })
+api.nvim_buf_set_extmark(buf, ns, 24, 0, {
+  sign_text = "E",
+  sign_hl_group = "DiagnosticSignError",
+})
+api.nvim_buf_set_extmark(buf, ns, 25, 0, {
+  sign_text = "W",
+  sign_hl_group = "DiagnosticSignWarn",
+})
+api.nvim_buf_set_extmark(buf, ns, 26, 0, {
+  sign_text = "I",
+  sign_hl_group = "DiagnosticSignInfo",
+})
+api.nvim_buf_set_extmark(buf, ns, 27, 0, {
+  sign_text = "H",
+  sign_hl_group = "DiagnosticSignHint",
+})
 
--- Put the cursor in the syntax section so CursorLine can be seen immediately.
-api.nvim_win_set_cursor(win, { 11, 0 })
+-- Show CursorLine immediately in the syntax section.
+api.nvim_win_set_cursor(win, { 12, 0 })
 
-vim.notify("NVIM FUSION v2 theme showcase loaded", vim.log.levels.INFO, { title = "NVIM FUSION" })
+vim.notify(
+  "NVIM FUSION v2 theme showcase loaded",
+  vim.log.levels.INFO,
+  { title = "NVIM FUSION" }
+)

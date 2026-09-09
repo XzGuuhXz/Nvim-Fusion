@@ -1,12 +1,9 @@
-# Neovim
+# Neovim local files
 *.swp
 *.swo
 *.swn
 *~
 .netrwhist
-
-# Neovim state/cache created locally
-.lazy-lock.json
 
 # OS / editor noise
 .DS_Store

@@ -1,6 +1,12 @@
 -- ========================================
--- NVIM-FUSION - Configuração Principal CORRIGIDA
+-- NVIM-FUSION - Configuração Principal
+-- Requer Neovim >= 0.12.0
 -- ========================================
+
+if vim.fn.has("nvim-0.12") ~= 1 then
+  vim.api.nvim_err_writeln("Nvim Fusion requer Neovim >= 0.12.0")
+  return
+end
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -27,7 +33,7 @@ vim.opt.clipboard = "unnamedplus"
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -41,7 +47,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Carregar plugins
 require("lazy").setup("plugins", {
-  ui = { 
+  ui = {
     border = "rounded",
     icons = {
       cmd = "⌘",
@@ -58,16 +64,16 @@ require("lazy").setup("plugins", {
       lazy = "💤 ",
     },
   },
-  install = { 
-    colorscheme = { "tokyonight" } 
+  install = {
+    colorscheme = { "tokyonight" },
   },
   checker = { enabled = true },
 })
 
 -- Keymaps básicos
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open netrw" })
-vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
-vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 
 -- Navegação entre janelas
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
@@ -87,35 +93,31 @@ vim.keymap.set("v", ">", ">gv", { desc = "Indent right" })
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result" })
 
--- CONFIGURAÇÃO ÚNICA DE DIAGNÓSTICOS - Movida para após carregamento dos plugins
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    vim.diagnostic.config({
-      virtual_text = {
-        prefix = "●",
-        spacing = 4,
-        severity_sort = true,
-        source = "if_many",
-      },
-      signs = {
-        text = {
-          [vim.diagnostic.severity.ERROR] = "",
-          [vim.diagnostic.severity.WARN]  = "",
-          [vim.diagnostic.severity.HINT]  = "",
-          [vim.diagnostic.severity.INFO]  = "",
-        }
-      },
-      underline = true,
-      update_in_insert = false,
-      severity_sort = true,
-      float = {
-        border = "rounded",
-        source = "always",
-        header = "",
-        prefix = "",
-        focusable = false,
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-      },
-    })
-  end,
+-- Diagnósticos: configurar diretamente, sem autocommand desnecessário
+vim.diagnostic.config({
+  virtual_text = {
+    prefix = "●",
+    spacing = 4,
+    severity_sort = true,
+    source = "if_many",
+  },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.HINT] = "",
+      [vim.diagnostic.severity.INFO] = "",
+    },
+  },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+    focusable = false,
+    close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+  },
 })

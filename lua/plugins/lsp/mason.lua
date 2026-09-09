@@ -32,7 +32,7 @@ return {
         "cssls",
         "clangd",
       },
-      automatic_installation = true,
+      -- O Nvim Fusion controla explicitamente a ativação com vim.lsp.enable().
       automatic_enable = false,
     },
   },

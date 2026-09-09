@@ -1,215 +1,275 @@
--- NVIM FUSION - Purple Theme
--- Custom colorscheme for the NVIM FUSION configuration.
+-- NVIM FUSION // NEON CYBERPUNK
+-- Proprietary colorscheme for Nvim Fusion v2.
+-- Palette: ultraviolet neon, deep violet, electric magenta and cyan.
 
 vim.cmd("highlight clear")
-if vim.fn.exists("syntax_on") then
+if vim.fn.exists("syntax_on") == 1 then
   vim.cmd("syntax reset")
 end
 
 vim.g.colors_name = "nvim-fusion"
 
 local c = {
-  bg = "#100B18",
-  bg_dark = "#0B0710",
-  bg_float = "#171021",
-  bg_highlight = "#21152F",
-  bg_visual = "#392050",
-  fg = "#E9DDF7",
-  fg_muted = "#A996B8",
-  purple = "#B77CFF",
-  purple_light = "#D6AEFF",
-  purple_dark = "#7C3AED",
-  violet = "#9D7CFF",
-  magenta = "#E08CFF",
-  blue = "#7AA2F7",
-  cyan = "#7DCFFF",
-  green = "#9ECE6A",
-  yellow = "#E0AF68",
-  orange = "#FF9E64",
-  red = "#F7768E",
-  border = "#5B3A78",
-  comment = "#756681",
+  -- Transparent / atmospheric layers
   none = "NONE",
+  void = "#08050D",
+  abyss = "#0D0816",
+  panel = "#130B20",
+  panel2 = "#1A0E2A",
+  panel3 = "#24133A",
+  panel4 = "#2E1948",
+  grid = "#392054",
+
+  -- Neon spectrum
+  neon = "#C77DFF",
+  neon2 = "#E879F9",
+  violet = "#A78BFA",
+  electric = "#8B5CF6",
+  ultraviolet = "#6D28D9",
+  cyan = "#67E8F9",
+  blue = "#60A5FA",
+  mint = "#5EEAD4",
+
+  -- Semantic
+  green = "#86EFAC",
+  yellow = "#FDE68A",
+  orange = "#FDBA74",
+  red = "#FB7185",
+
+  -- Text
+  fg = "#F5EFFF",
+  fg2 = "#D8C8EA",
+  muted = "#8E7A9F",
+  dim = "#5F4B70",
+  border = "#512B75",
 }
 
 local function hi(group, opts)
   vim.api.nvim_set_hl(0, group, opts)
 end
 
--- Editor
-hi("Normal", { fg = c.fg, bg = c.bg })
-hi("NormalFloat", { fg = c.fg, bg = c.bg_float })
-hi("NormalNC", { fg = c.fg_muted, bg = c.bg })
-hi("SignColumn", { bg = c.bg })
-hi("EndOfBuffer", { fg = c.bg_highlight, bg = c.bg })
-hi("Cursor", { fg = c.bg, bg = c.purple_light })
-hi("CursorLine", { bg = c.bg_highlight })
-hi("CursorColumn", { bg = c.bg_highlight })
-hi("ColorColumn", { bg = c.bg_highlight })
-hi("LineNr", { fg = c.comment, bg = c.bg })
-hi("CursorLineNr", { fg = c.purple_light, bold = true, bg = c.bg_highlight })
-hi("Visual", { bg = c.bg_visual })
-hi("Search", { fg = c.bg, bg = c.purple_light, bold = true })
-hi("IncSearch", { fg = c.bg, bg = c.magenta, bold = true })
-hi("CurSearch", { fg = c.bg, bg = c.magenta, bold = true })
-hi("MatchParen", { fg = c.purple_light, bg = c.bg_visual, bold = true })
-hi("Folded", { fg = c.fg_muted, bg = c.bg_highlight })
-hi("FoldColumn", { fg = c.purple, bg = c.bg })
-hi("NonText", { fg = c.border })
-hi("Whitespace", { fg = c.border })
-hi("SpecialKey", { fg = c.purple })
-hi("Directory", { fg = c.purple_light, bold = true })
-hi("Title", { fg = c.purple_light, bold = true })
-hi("Question", { fg = c.green, bold = true })
+-- ============================================================================
+-- ATMOSPHERE / EDITOR
+-- ============================================================================
+hi("Normal", { fg = c.fg, bg = c.none })
+hi("NormalNC", { fg = c.fg2, bg = c.none })
+hi("NormalFloat", { fg = c.fg, bg = c.panel })
+hi("FloatBorder", { fg = c.neon, bg = c.panel })
+hi("FloatTitle", { fg = c.void, bg = c.neon, bold = true })
+hi("SignColumn", { bg = c.none })
+hi("EndOfBuffer", { fg = c.dim, bg = c.none })
+hi("Cursor", { fg = c.void, bg = c.neon })
+hi("CursorLine", { bg = c.panel })
+hi("CursorColumn", { bg = c.panel })
+hi("ColorColumn", { bg = c.panel2 })
+hi("LineNr", { fg = c.dim, bg = c.none })
+hi("CursorLineNr", { fg = c.neon2, bg = c.panel, bold = true })
+hi("Visual", { bg = c.panel4, bold = true })
+hi("VisualNOS", { bg = c.panel4 })
+hi("Search", { fg = c.void, bg = c.cyan, bold = true })
+hi("IncSearch", { fg = c.void, bg = c.neon2, bold = true })
+hi("CurSearch", { fg = c.void, bg = c.neon, bold = true })
+hi("MatchParen", { fg = c.neon, bg = c.panel3, bold = true, underline = true })
+hi("Folded", { fg = c.violet, bg = c.panel })
+hi("FoldColumn", { fg = c.electric, bg = c.none })
+hi("NonText", { fg = c.grid })
+hi("Whitespace", { fg = c.grid })
+hi("SpecialKey", { fg = c.electric })
+hi("Directory", { fg = c.cyan, bold = true })
+hi("Title", { fg = c.neon, bold = true })
+hi("Question", { fg = c.mint, bold = true })
 hi("MoreMsg", { fg = c.cyan })
 hi("ModeMsg", { fg = c.fg, bold = true })
 hi("WarningMsg", { fg = c.yellow })
 hi("ErrorMsg", { fg = c.red, bold = true })
+hi("Conceal", { fg = c.violet })
+hi("WildMenu", { fg = c.void, bg = c.neon, bold = true })
 
--- Syntax
-hi("Comment", { fg = c.comment, italic = true })
-hi("Constant", { fg = c.magenta })
-hi("String", { fg = c.green })
-hi("Character", { fg = c.green })
+-- ============================================================================
+-- SYNTAX // NEON SPECTRUM
+-- ============================================================================
+hi("Comment", { fg = c.muted, italic = true })
+hi("Constant", { fg = c.neon2 })
+hi("String", { fg = c.mint })
+hi("Character", { fg = c.mint })
 hi("Number", { fg = c.orange })
 hi("Boolean", { fg = c.orange, bold = true })
 hi("Float", { fg = c.orange })
-hi("Identifier", { fg = c.fg })
-hi("Function", { fg = c.purple_light, bold = true })
-hi("Statement", { fg = c.purple })
-hi("Conditional", { fg = c.purple, bold = true })
-hi("Repeat", { fg = c.purple, bold = true })
-hi("Label", { fg = c.violet })
-hi("Operator", { fg = c.magenta })
-hi("Keyword", { fg = c.purple, bold = true })
+hi("Identifier", { fg = c.fg2 })
+hi("Function", { fg = c.neon, bold = true })
+hi("Statement", { fg = c.violet })
+hi("Conditional", { fg = c.electric, bold = true })
+hi("Repeat", { fg = c.electric, bold = true })
+hi("Label", { fg = c.cyan })
+hi("Operator", { fg = c.neon2 })
+hi("Keyword", { fg = c.neon, bold = true })
 hi("Exception", { fg = c.red })
-hi("PreProc", { fg = c.violet })
-hi("Include", { fg = c.magenta })
+hi("PreProc", { fg = c.cyan })
+hi("Include", { fg = c.neon2 })
 hi("Define", { fg = c.violet })
 hi("Macro", { fg = c.violet })
 hi("Type", { fg = c.cyan })
 hi("StorageClass", { fg = c.cyan })
 hi("Structure", { fg = c.cyan })
 hi("Typedef", { fg = c.cyan })
-hi("Special", { fg = c.magenta })
-hi("Delimiter", { fg = c.fg_muted })
-hi("Underlined", { underline = true, fg = c.purple_light })
+hi("Special", { fg = c.neon2 })
+hi("Delimiter", { fg = c.fg2 })
+hi("Underlined", { fg = c.cyan, underline = true })
 hi("Error", { fg = c.red, bold = true })
 
--- Treesitter
-hi("@comment", { link = "Comment" })
-hi("@string", { link = "String" })
-hi("@number", { link = "Number" })
-hi("@boolean", { link = "Boolean" })
-hi("@constant", { link = "Constant" })
-hi("@function", { link = "Function" })
-hi("@function.call", { fg = c.purple_light })
-hi("@function.method", { fg = c.purple_light })
-hi("@keyword", { link = "Keyword" })
-hi("@keyword.function", { fg = c.magenta, bold = true })
-hi("@keyword.return", { fg = c.purple_light, bold = true })
-hi("@type", { link = "Type" })
-hi("@type.builtin", { fg = c.cyan, italic = true })
-hi("@variable", { fg = c.fg })
-hi("@variable.builtin", { fg = c.magenta })
-hi("@parameter", { fg = c.fg_muted })
-hi("@property", { fg = c.violet })
-hi("@field", { fg = c.violet })
-hi("@operator", { link = "Operator" })
-hi("@punctuation.bracket", { fg = c.fg_muted })
-hi("@punctuation.delimiter", { fg = c.fg_muted })
-hi("@tag", { fg = c.purple })
-hi("@tag.attribute", { fg = c.violet })
-hi("@tag.delimiter", { fg = c.fg_muted })
+-- ============================================================================
+-- TREESITTER
+-- ============================================================================
+local ts = {
+  ["@comment"] = { link = "Comment" },
+  ["@string"] = { link = "String" },
+  ["@number"] = { link = "Number" },
+  ["@boolean"] = { link = "Boolean" },
+  ["@constant"] = { link = "Constant" },
+  ["@constant.builtin"] = { fg = c.neon2 },
+  ["@function"] = { link = "Function" },
+  ["@function.call"] = { fg = c.neon },
+  ["@function.method"] = { fg = c.neon },
+  ["@keyword"] = { link = "Keyword" },
+  ["@keyword.function"] = { fg = c.neon2, bold = true },
+  ["@keyword.return"] = { fg = c.cyan, bold = true },
+  ["@type"] = { link = "Type" },
+  ["@type.builtin"] = { fg = c.cyan, italic = true },
+  ["@variable"] = { fg = c.fg2 },
+  ["@variable.builtin"] = { fg = c.neon2 },
+  ["@parameter"] = { fg = c.muted },
+  ["@property"] = { fg = c.violet },
+  ["@field"] = { fg = c.violet },
+  ["@operator"] = { link = "Operator" },
+  ["@punctuation.bracket"] = { fg = c.muted },
+  ["@punctuation.delimiter"] = { fg = c.dim },
+  ["@tag"] = { fg = c.neon },
+  ["@tag.attribute"] = { fg = c.cyan },
+  ["@tag.delimiter"] = { fg = c.muted },
+}
+for group, opts in pairs(ts) do hi(group, opts) end
 
--- UI / Windows
-hi("WinSeparator", { fg = c.border, bg = c.bg })
-hi("FloatBorder", { fg = c.purple, bg = c.bg_float })
-hi("FloatTitle", { fg = c.purple_light, bg = c.bg_float, bold = true })
-hi("Pmenu", { fg = c.fg, bg = c.bg_float })
-hi("PmenuSel", { fg = c.bg, bg = c.purple })
-hi("PmenuSbar", { bg = c.bg_highlight })
-hi("PmenuThumb", { bg = c.purple_dark })
-hi("StatusLine", { fg = c.fg, bg = c.bg_float })
-hi("StatusLineNC", { fg = c.fg_muted, bg = c.bg_highlight })
-hi("TabLine", { fg = c.fg_muted, bg = c.bg_dark })
-hi("TabLineFill", { bg = c.bg_dark })
-hi("TabLineSel", { fg = c.purple_light, bg = c.bg_highlight, bold = true })
+-- ============================================================================
+-- UI // LAYERED GRADIENTS
+-- ============================================================================
+hi("WinSeparator", { fg = c.border, bg = c.none })
+hi("VertSplit", { fg = c.border, bg = c.none })
+hi("StatusLine", { fg = c.fg, bg = c.panel })
+hi("StatusLineNC", { fg = c.muted, bg = c.abyss })
+hi("TabLine", { fg = c.muted, bg = c.abyss })
+hi("TabLineFill", { bg = c.void })
+hi("TabLineSel", { fg = c.fg, bg = c.panel3, bold = true })
+hi("Pmenu", { fg = c.fg, bg = c.panel })
+hi("PmenuSel", { fg = c.void, bg = c.neon, bold = true })
+hi("PmenuSbar", { bg = c.panel3 })
+hi("PmenuThumb", { bg = c.electric })
+hi("PmenuKind", { fg = c.cyan, bg = c.panel })
+hi("PmenuExtra", { fg = c.muted, bg = c.panel })
+hi("StatusLineTerm", { fg = c.fg, bg = c.panel })
+hi("StatusLineTermNC", { fg = c.muted, bg = c.abyss })
 
--- Diagnostics
+-- ============================================================================
+-- DIAGNOSTICS / LSP
+-- ============================================================================
 hi("DiagnosticError", { fg = c.red })
 hi("DiagnosticWarn", { fg = c.yellow })
 hi("DiagnosticInfo", { fg = c.cyan })
-hi("DiagnosticHint", { fg = c.purple_light })
+hi("DiagnosticHint", { fg = c.neon })
+hi("DiagnosticOk", { fg = c.green })
 hi("DiagnosticUnderlineError", { undercurl = true, sp = c.red })
 hi("DiagnosticUnderlineWarn", { undercurl = true, sp = c.yellow })
 hi("DiagnosticUnderlineInfo", { undercurl = true, sp = c.cyan })
-hi("DiagnosticUnderlineHint", { undercurl = true, sp = c.purple_light })
-hi("LspReferenceText", { bg = c.bg_visual })
-hi("LspReferenceRead", { bg = c.bg_visual })
-hi("LspReferenceWrite", { bg = c.bg_visual })
+hi("DiagnosticUnderlineHint", { undercurl = true, sp = c.neon })
+hi("LspReferenceText", { bg = c.panel3 })
+hi("LspReferenceRead", { bg = c.panel3 })
+hi("LspReferenceWrite", { bg = c.panel4, bold = true })
+hi("LspInlayHint", { fg = c.dim, bg = c.panel })
 
--- Git
+-- ============================================================================
+-- GIT
+-- ============================================================================
 hi("GitSignsAdd", { fg = c.green })
-hi("GitSignsChange", { fg = c.yellow })
+hi("GitSignsChange", { fg = c.cyan })
 hi("GitSignsDelete", { fg = c.red })
-hi("DiffAdd", { fg = c.green, bg = "#172516" })
-hi("DiffChange", { fg = c.yellow, bg = "#241D12" })
-hi("DiffDelete", { fg = c.red, bg = "#28151C" })
-hi("DiffText", { fg = c.purple_light, bg = c.bg_visual, bold = true })
+hi("DiffAdd", { fg = c.green, bg = "#10261C" })
+hi("DiffChange", { fg = c.cyan, bg = "#10232A" })
+hi("DiffDelete", { fg = c.red, bg = "#29131E" })
+hi("DiffText", { fg = c.void, bg = c.neon, bold = true })
 
--- Telescope
-hi("TelescopeNormal", { fg = c.fg, bg = c.bg_float })
-hi("TelescopeBorder", { fg = c.border, bg = c.bg_float })
-hi("TelescopePromptNormal", { fg = c.fg, bg = c.bg_highlight })
-hi("TelescopePromptBorder", { fg = c.purple, bg = c.bg_highlight })
-hi("TelescopePromptTitle", { fg = c.bg, bg = c.purple, bold = true })
-hi("TelescopePreviewTitle", { fg = c.bg, bg = c.magenta, bold = true })
-hi("TelescopeResultsTitle", { fg = c.bg, bg = c.violet, bold = true })
-hi("TelescopeSelection", { fg = c.fg, bg = c.bg_visual })
-hi("TelescopeMatching", { fg = c.purple_light, bold = true })
+-- ============================================================================
+-- TELESCOPE // CYBER PANELS
+-- ============================================================================
+hi("TelescopeNormal", { fg = c.fg, bg = c.panel })
+hi("TelescopeBorder", { fg = c.electric, bg = c.panel })
+hi("TelescopePromptNormal", { fg = c.fg, bg = c.panel2 })
+hi("TelescopePromptBorder", { fg = c.neon, bg = c.panel2 })
+hi("TelescopePromptTitle", { fg = c.void, bg = c.neon, bold = true })
+hi("TelescopePreviewTitle", { fg = c.void, bg = c.cyan, bold = true })
+hi("TelescopeResultsTitle", { fg = c.void, bg = c.neon2, bold = true })
+hi("TelescopeSelection", { fg = c.fg, bg = c.panel4, bold = true })
+hi("TelescopeMatching", { fg = c.cyan, bold = true })
 
--- Neo-tree / NvimTree
-hi("NeoTreeNormal", { fg = c.fg, bg = c.bg_float })
-hi("NeoTreeNormalNC", { fg = c.fg_muted, bg = c.bg_float })
-hi("NeoTreeDirectoryIcon", { fg = c.purple })
-hi("NeoTreeDirectoryName", { fg = c.purple_light })
-hi("NeoTreeFileName", { fg = c.fg })
+-- ============================================================================
+-- FILE EXPLORERS / WHICH-KEY / CMP
+-- ============================================================================
+hi("NeoTreeNormal", { fg = c.fg, bg = c.panel })
+hi("NeoTreeNormalNC", { fg = c.muted, bg = c.panel })
+hi("NeoTreeDirectoryIcon", { fg = c.neon })
+hi("NeoTreeDirectoryName", { fg = c.cyan })
+hi("NeoTreeFileName", { fg = c.fg2 })
 hi("NeoTreeGitAdded", { fg = c.green })
 hi("NeoTreeGitModified", { fg = c.yellow })
 hi("NeoTreeGitDeleted", { fg = c.red })
-hi("NvimTreeNormal", { fg = c.fg, bg = c.bg_float })
-hi("NvimTreeFolderIcon", { fg = c.purple })
-hi("NvimTreeFolderName", { fg = c.purple_light })
-hi("NvimTreeOpenedFolderName", { fg = c.magenta, bold = true })
+hi("NvimTreeNormal", { fg = c.fg, bg = c.panel })
+hi("NvimTreeFolderIcon", { fg = c.neon })
+hi("NvimTreeFolderName", { fg = c.cyan })
+hi("NvimTreeOpenedFolderName", { fg = c.neon2, bold = true })
 hi("NvimTreeGitNewIcon", { fg = c.green })
 hi("NvimTreeGitDirtyIcon", { fg = c.yellow })
 hi("NvimTreeGitDeletedIcon", { fg = c.red })
 
--- Which-Key
-hi("WhichKey", { fg = c.purple_light })
-hi("WhichKeyGroup", { fg = c.magenta })
-hi("WhichKeyDesc", { fg = c.fg })
+hi("WhichKey", { fg = c.neon })
+hi("WhichKeyGroup", { fg = c.neon2 })
+hi("WhichKeyDesc", { fg = c.fg2 })
 hi("WhichKeySeparator", { fg = c.border })
-hi("WhichKeyFloat", { bg = c.bg_float })
-hi("WhichKeyValue", { fg = c.fg_muted })
+hi("WhichKeyFloat", { bg = c.panel })
+hi("WhichKeyValue", { fg = c.muted })
 
--- Completion
 hi("CmpItemAbbr", { fg = c.fg })
-hi("CmpItemAbbrMatch", { fg = c.purple_light, bold = true })
-hi("CmpItemAbbrMatchFuzzy", { fg = c.magenta, bold = true })
-hi("CmpItemKind", { fg = c.violet })
-hi("CmpItemMenu", { fg = c.comment })
+hi("CmpItemAbbrMatch", { fg = c.neon, bold = true })
+hi("CmpItemAbbrMatchFuzzy", { fg = c.neon2, bold = true })
+hi("CmpItemKind", { fg = c.cyan })
+hi("CmpItemMenu", { fg = c.muted })
 
--- Markdown
-hi("markdownHeadingDelimiter", { fg = c.purple, bold = true })
-hi("markdownH1", { fg = c.purple_light, bold = true })
-hi("markdownH2", { fg = c.magenta, bold = true })
-hi("markdownCode", { fg = c.green })
+-- ============================================================================
+-- MARKDOWN / SPELLING
+-- ============================================================================
+hi("markdownHeadingDelimiter", { fg = c.neon, bold = true })
+hi("markdownH1", { fg = c.neon, bold = true })
+hi("markdownH2", { fg = c.neon2, bold = true })
+hi("markdownCode", { fg = c.mint })
 hi("markdownLinkText", { fg = c.cyan, underline = true })
-
--- Spelling
 hi("SpellBad", { undercurl = true, sp = c.red })
 hi("SpellCap", { undercurl = true, sp = c.yellow })
 hi("SpellLocal", { undercurl = true, sp = c.cyan })
-hi("SpellRare", { undercurl = true, sp = c.purple_light })
+hi("SpellRare", { undercurl = true, sp = c.neon })
+
+-- ============================================================================
+-- TERMINAL COLORS
+-- ============================================================================
+vim.g.terminal_color_0 = c.void
+vim.g.terminal_color_1 = c.red
+vim.g.terminal_color_2 = c.green
+vim.g.terminal_color_3 = c.yellow
+vim.g.terminal_color_4 = c.blue
+vim.g.terminal_color_5 = c.neon2
+vim.g.terminal_color_6 = c.cyan
+vim.g.terminal_color_7 = c.fg2
+vim.g.terminal_color_8 = c.dim
+vim.g.terminal_color_9 = c.red
+vim.g.terminal_color_10 = c.green
+vim.g.terminal_color_11 = c.yellow
+vim.g.terminal_color_12 = c.cyan
+vim.g.terminal_color_13 = c.neon
+vim.g.terminal_color_14 = c.cyan
+vim.g.terminal_color_15 = c.fg

@@ -1,0 +1,19 @@
+# Neovim
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+
+# Neovim state/cache created locally
+.lazy-lock.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.log

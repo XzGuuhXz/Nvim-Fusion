@@ -4,6 +4,7 @@
 
 [![Neovim](https://img.shields.io/badge/Neovim-0.12%2B-57A6FF?style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
 [![Lua](https://img.shields.io/badge/Lua-5.1%2B-8A6FFF?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)
+[![CI](https://github.com/XzGuuhXz/Nvim-Fusion/actions/workflows/nvim.yml/badge.svg)](https://github.com/XzGuuhXz/Nvim-Fusion/actions/workflows/nvim.yml)
 [![License](https://img.shields.io/github/license/XzGuuhXz/Nvim-Fusion?style=for-the-badge)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/XzGuuhXz/Nvim-Fusion?style=for-the-badge&logo=github)](https://github.com/XzGuuhXz/Nvim-Fusion/commits/main)
 
@@ -36,9 +37,9 @@ A configuração usa **Lazy.nvim**, **Mason**, **LSP**, **nvim-cmp**, **Treesitt
 | Node.js | Necessário para alguns LSPs, conforme a linguagem |
 | Python | Necessário para o Pyright, conforme sua instalação |
 | C/C++ toolchain | Necessário para clangd e compilação de projetos |
-| tree-sitter CLI | Recomendado para instalação/atualização dos parsers |
+| tree-sitter CLI | **0.26.1+** para instalação/atualização dos parsers |
 
-> O projeto foi atualizado para APIs modernas do Neovim. Versões antigas do Neovim não são suportadas.
+> O projeto usa APIs modernas do Neovim e a linha atual do nvim-treesitter. Versões antigas do Neovim não são suportadas.
 
 ## 🚀 Instalação
 
@@ -56,8 +57,16 @@ mv ~/.local/share/nvim ~/.local/share/nvim.backup-$(date +%Y%m%d-%H%M%S)
 
 ### 2. Clone o NVIM FUSION
 
+HTTPS:
+
 ```bash
 git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
+```
+
+SSH:
+
+```bash
+git clone git@github.com:XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
 ```
 
 ### 3. Inicie o Neovim
@@ -84,22 +93,22 @@ Dentro do Neovim:
 
 ```bash
 sudo apt update
-sudo apt install git ripgrep nodejs npm build-essential
+sudo apt install git ripgrep fd-find nodejs npm build-essential
 ```
 
 ### Arch Linux
 
 ```bash
-sudo pacman -S git ripgrep nodejs npm base-devel
+sudo pacman -S git ripgrep fd nodejs npm base-devel tree-sitter-cli
 ```
 
 ### Fedora
 
 ```bash
-sudo dnf install git ripgrep nodejs npm gcc gcc-c++ make
+sudo dnf install git ripgrep fd-find nodejs npm gcc gcc-c++ make tree-sitter-cli
 ```
 
-> O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga.
+> O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga. O CLI do Treesitter deve ser **0.26.1 ou superior**.
 
 ## 🎨 Identidade visual
 
@@ -204,9 +213,13 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 ├── LICENSE
 ├── README.md
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── nvim.yml
 ├── colors/
 │   └── nvim-fusion.lua
 ├── tests/
+│   ├── config_test.lua
 │   └── theme_test.lua
 └── lua/
     ├── config/
@@ -226,7 +239,17 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
         └── util/
 ```
 
-## 🧪 Teste o tema
+## 🧪 Testes
+
+### Teste de configuração
+
+```bash
+nvim -u init.lua +"luafile tests/config_test.lua" +qa
+```
+
+O teste verifica versão mínima, opções essenciais, colorscheme, keymaps principais e os sete servidores LSP configurados.
+
+### Teste do tema
 
 O projeto possui um showcase executável para validar a identidade visual:
 
@@ -239,6 +262,16 @@ Ou, dentro do Neovim:
 ```vim
 :luafile tests/theme_test.lua
 ```
+
+### CI
+
+Cada push para `main` e cada Pull Request executa automaticamente:
+
+- build do Neovim atual;
+- instalação dos plugins;
+- testes de configuração;
+- teste do tema;
+- `:checkhealth`.
 
 ## 🔧 Troubleshooting
 
@@ -272,13 +305,13 @@ O mínimo suportado é **0.12**.
 
 ### Treesitter
 
-Se os parsers não forem instalados automaticamente, verifique se o CLI está disponível:
+Verifique a versão do CLI:
 
 ```bash
 tree-sitter --version
 ```
 
-Depois:
+Use **0.26.1 ou superior**. Depois, reinicie o Neovim e, se necessário, atualize os parsers:
 
 ```vim
 :TSUpdate
@@ -311,11 +344,34 @@ Nunca faça commit de:
 
 O projeto inclui um `.gitignore` para reduzir o risco de arquivos locais acidentais serem versionados.
 
+## 📊 Qualidade e desenvolvimento
+
+Antes de abrir um Pull Request, execute:
+
+```bash
+nvim -u init.lua +"Lazy! sync" +qa
+nvim -u init.lua +"luafile tests/config_test.lua" +qa
+nvim -u init.lua +"luafile tests/theme_test.lua" +qa
+nvim -u init.lua "+checkhealth" +qa
+```
+
+Para investigar startup:
+
+```bash
+nvim --startuptime startup.log
+```
+
+Dentro do Neovim, o perfil de plugins pode ser analisado com:
+
+```vim
+:Lazy profile
+```
+
 ## 📌 Status do projeto
 
-**NVIM FUSION está aberto para testes.**
+**NVIM FUSION está em preparação para a release v2.0.0.**
 
-A configuração é experimental e pode exigir ajustes dependendo do sistema operacional, terminal, fonte e ferramentas instaladas.
+A configuração é voltada para Neovim 0.12+ e pode exigir ajustes dependendo do sistema operacional, terminal, fonte e ferramentas instaladas.
 
 Se encontrar um problema, abra uma Issue informando:
 
@@ -333,6 +389,7 @@ Antes de abrir um PR:
 
 ```bash
 git diff
+nvim -u init.lua +"luafile tests/config_test.lua" +qa
 ```
 
 Teste a configuração em uma instalação limpa sempre que possível.

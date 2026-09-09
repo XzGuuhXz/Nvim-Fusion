@@ -1,0 +1,55 @@
+name: NVIM FUSION CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            curl \
+            gettext \
+            ninja-build \
+            unzip \
+            ripgrep \
+            fd-find \
+            nodejs \
+            npm
+
+      - name: Build Neovim 0.12+
+        run: |
+          git clone --depth 1 https://github.com/neovim/neovim.git "$RUNNER_TEMP/neovim"
+          cmake -S "$RUNNER_TEMP/neovim" -B "$RUNNER_TEMP/neovim/build" -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$RUNNER_TEMP/neovim/build"
+          sudo cmake --install "$RUNNER_TEMP/neovim/build"
+
+      - name: Install tree-sitter CLI
+        run: npm install --global tree-sitter-cli
+
+      - name: Validate Neovim version
+        run: nvim --version
+
+      - name: Install plugins
+        run: nvim --headless -u init.lua "+Lazy! sync" "+qa"
+
+      - name: Run configuration tests
+        run: nvim --headless -u init.lua "+luafile tests/config_test.lua" "+qa"
+
+      - name: Run theme test
+        run: nvim --headless -u init.lua "+luafile tests/theme_test.lua" "+qa"
+
+      - name: Run health checks
+        run: nvim --headless -u init.lua "+checkhealth" "+qa"

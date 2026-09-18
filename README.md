@@ -1,289 +1,459 @@
-<div align="center">
+# NVIM FUSION 🚀
 
-# NVIM FUSION
+> Uma configuração modular, moderna e neon-cyberpunk para Neovim, focada em produtividade, LSP, navegação de código e uma identidade visual própria.
 
-**Seu código, em neon.**
-
-Um rice para Neovim escrito em Lua, com tema próprio, navegação por teclado e um ambiente de desenvolvimento modular.
-
-[![Neovim 0.12+](https://img.shields.io/badge/Neovim-0.12%2B-C77DFF?style=for-the-badge&logo=neovim&logoColor=white)](#requisitos)
-[![Lua](https://img.shields.io/badge/feito_em-Lua-A78BFA?style=for-the-badge&logo=lua&logoColor=white)](lua/)
-[![MIT](https://img.shields.io/badge/licença-MIT-E879F9?style=for-the-badge)](LICENSE)
+[![Neovim](https://img.shields.io/badge/Neovim-0.12%2B-57A6FF?style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
+[![Lua](https://img.shields.io/badge/Lua-5.1%2B-8A6FFF?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)
 [![CI](https://github.com/XzGuuhXz/Nvim-Fusion/actions/workflows/nvim.yml/badge.svg)](https://github.com/XzGuuhXz/Nvim-Fusion/actions/workflows/nvim.yml)
+[![License](https://img.shields.io/github/license/XzGuuhXz/Nvim-Fusion?style=for-the-badge)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/XzGuuhXz/Nvim-Fusion?style=for-the-badge&logo=github)](https://github.com/XzGuuhXz/Nvim-Fusion/commits/main)
 
-[Visual](#visual) · [Instalação](#instalação) · [Atalhos](docs/KEYMAPS.md) · [Personalização](docs/CUSTOMIZATION.md) · [Problemas comuns](docs/TROUBLESHOOTING.md)
+## 📸 Visual do rice
 
-</div>
+### Editor
 
-![NVIM FUSION com tema violeta, árvore de arquivos, código Lua e statusline](docs/images/editor.png)
-
-## Sobre o rice
-
-O **NVIM FUSION** combina o tema **Neon Cyberpunk** com busca de arquivos e texto, autocomplete, snippets, diagnósticos e integração com Git. A paleta mistura fundos escuros, violeta, magenta e fúcsia; os módulos em Lua permitem ajustar cada parte da configuração.
-
-O repositório configura o Neovim. Fonte, transparência, blur e papel de parede são configurados separadamente no terminal ou compositor.
-
-## Visual
+![NVIM FUSION com código Lua, árvore de arquivos e statusline](docs/images/editor.png)
 
 ### Tela inicial
 
-![Dashboard Alpha com logo do Neovim e atalhos de entrada](docs/images/dashboard.png)
+![Dashboard do Neovim com atalhos de entrada](docs/images/dashboard.png)
 
 ### Busca de arquivos
 
-![Telescope aberto sobre o editor com lista de arquivos e prévia](docs/images/telescope.png)
+![Telescope com lista de arquivos e prévia](docs/images/telescope.png)
 
-As imagens mostram a interface real da configuração, capturada pela API de UI do Neovim e renderizada em PNG com JetBrainsMono Nerd Font e fundo sólido `#08050D`. A aparência do fundo no seu terminal depende da transparência configurada. Veja [como atualizar as imagens](docs/images/README.md).
+As imagens mostram a interface real da configuração, capturada pela API de UI do Neovim e renderizada com JetBrainsMono Nerd Font e fundo sólido `#08050D`. A transparência e o fundo podem variar conforme o terminal.
 
-## O que vem incluído
+## ✨ Sobre
 
-| Área | Componentes e recursos |
+**NVIM FUSION** é uma configuração pessoal de Neovim transformada em um projeto aberto para quem quer um ambiente de desenvolvimento pronto, modular e fácil de modificar.
+
+A configuração usa **Lazy.nvim**, **Mason**, **LSP**, **nvim-cmp**, **Treesitter**, **Telescope**, **NvimTree**, **Gitsigns** e uma identidade visual própria chamada **NVIM FUSION v2 Neon Cyberpunk**.
+
+### Filosofia
+
+- ⚡ Performance com carregamento lazy
+- 🧩 Configuração modular por responsabilidade
+- 🎨 Tema próprio em roxo, violeta, magenta e fúcsia
+- 🧠 LSP e completion para desenvolvimento moderno
+- 🌳 Treesitter para destaque e estrutura de código
+- 🔎 Telescope para busca e navegação
+- 🌲 NvimTree para exploração de arquivos
+- 󰊢 Gitsigns para integração visual com Git
+- 🔤 Nerd Font para uma interface rica em ícones
+
+## 📦 Requisitos
+
+| Requisito | Versão / observação |
 |---|---|
-| Visual | Tema local `nvim-fusion`, Alpha, Lualine, Bufferline e ícones |
-| Navegação | NvimTree, Telescope e Which-Key |
-| Código | LSP nativo, nvim-lspconfig, Mason e diagnósticos |
-| Autocomplete | nvim-cmp, LuaSnip e friendly-snippets; fontes de LSP, buffer e caminhos |
-| Sintaxe | Treesitter, guias de indentação e visualização de cores |
-| Git | Gitsigns: alterações na margem, hunks, stage, blame e diff |
-| Diagnósticos | Trouble para diagnósticos, símbolos, quickfix e referências |
-| Edição | Autopairs, Comment.nvim e atalhos para mover linhas e janelas |
-| Plugins | Lazy.nvim e revisões registradas em `lazy-lock.json` |
+| Neovim | **0.12+** |
+| Git | Necessário para o Lazy.nvim |
+| Nerd Font | Recomendada para os ícones |
+| ripgrep | Recomendado para buscas do Telescope |
+| Node.js | Necessário para alguns LSPs, conforme a linguagem |
+| Python | Necessário para o Pyright, conforme sua instalação |
+| C/C++ toolchain | Necessário para clangd e compilação de projetos |
+| tree-sitter CLI | **0.26.1+** para instalação/atualização dos parsers |
 
-### Linguagens
+> O projeto usa APIs modernas do Neovim e a linha atual do nvim-treesitter. Versões antigas do Neovim não são suportadas.
 
-| Linguagem | Servidor LSP configurado |
-|---|---|
-| Lua | `lua_ls` |
-| Python | `pyright` |
-| JavaScript / TypeScript | `ts_ls` |
-| JSON | `jsonls` |
-| HTML | `html` |
-| CSS | `cssls` |
-| C / C++ / Objective-C / Objective-C++ | `clangd` |
+## 🚀 Instalação
 
-Mason solicita a instalação desses sete servidores; a ativação é feita explicitamente em [servers.lua](lua/plugins/lsp/servers.lua). A instalação depende de rede e das ferramentas exigidas por cada servidor.
-
-Treesitter também solicita parsers de Lua, Vim, help, queries, Python, JavaScript, TypeScript, TSX, HTML, CSS, JSON, YAML, Bash, Markdown, C e C++. **Destaque de sintaxe e LSP são recursos diferentes:** Bash e YAML têm parser, mas não têm LSP habilitado aqui.
-
-`Espaço lf` usa a formatação oferecida pelo servidor conectado. Pyright não formata Python; esse caso exige um formatador adicional. Instalar outro servidor pelo Mason, por si só, não o habilita.
-
-## Requisitos
-
-Os comandos abaixo são para Linux com Bash. Em outros sistemas, adapte os caminhos e a instalação das dependências.
-
-| Dependência | Finalidade |
-|---|---|
-| **Neovim 0.12+** | Versão mínima verificada pelo `init.lua`; CI configurado para **0.12.5** |
-| Git | Clonar a configuração e baixar plugins |
-| Acesso à internet | Primeira instalação de plugins, servidores e parsers |
-| Terminal com true color | Exibir a paleta do tema |
-| Nerd Font selecionada no terminal | Exibir ícones; não é instalada pelo rice |
-| `ripgrep` (`rg`) | Busca de texto do Telescope |
-| `fd` / `fdfind` | Ferramenta auxiliar para busca de arquivos |
-| Node.js e npm | Servidores distribuídos via npm, como Pyright e TypeScript |
-| Compilador C, make e ferramentas de extração | Compilação de parsers e instalação de ferramentas |
-| tree-sitter CLI | Compilar/atualizar parsers; referência do CI: **0.26.9** |
-| Provedor de clipboard | Integração com área de transferência; confira `:checkhealth vim.provider` |
-
-Python deve estar disponível para executar seus projetos Python. O Pyright usado pelo Mason depende de Node.js; o provider Python do Neovim é um recurso separado.
-
-Antes de começar, confira o que está disponível:
+### 1. Faça backup da configuração atual
 
 ```bash
-nvim --version
-git --version
-rg --version
-node --version
-npm --version
-tree-sitter --version
+mv ~/.config/nvim ~/.config/nvim.backup-$(date +%Y%m%d-%H%M%S)
 ```
 
-## Instalação
-
-### Preparar as dependências
-
-Em Debian/Ubuntu, as ferramentas usadas pelo workflow do projeto podem ser instaladas com:
+Se quiser preservar também dados e plugins anteriores:
 
 ```bash
-sudo apt update
-sudo apt install git curl unzip ripgrep fd-find nodejs npm \
-  build-essential cmake gettext ninja-build
+mv ~/.local/share/nvim ~/.local/share/nvim.backup-$(date +%Y%m%d-%H%M%S)
 ```
 
-Instale o Neovim 0.12+ pelo gerenciador da sua distribuição, se ele oferecer essa versão, ou compile conforme o [workflow do projeto](.github/workflows/nvim.yml). Confira `nvim --version` antes de continuar: instalar o pacote `neovim` não garante a versão mínima.
+### 2. Clone o NVIM FUSION
 
-Para reproduzir a versão do CLI usada pelo CI, em uma instalação de Node com prefixo global gravável pelo seu usuário:
+HTTPS:
 
 ```bash
-npm install --global tree-sitter-cli@0.26.9
+git clone https://github.com/XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
 ```
 
-Se houver erro de permissão, ajuste sua instalação/prefixo do npm ou use o pacote da distribuição, conferindo a versão. Configure também uma Nerd Font no terminal e, caso use clipboard, o provider apropriado à sua sessão. Em outras distribuições, instale os equivalentes da tabela de requisitos.
-
-### 1. Escolha como instalar
-
-#### Experimentar sem substituir seu Neovim
-
-O nome `nvim-fusion` separa configuração, plugins, estado e cache da instalação padrão:
+SSH:
 
 ```bash
-git clone https://github.com/XzGuuhXz/Nvim-Fusion.git \
-  "${XDG_CONFIG_HOME:-$HOME/.config}/nvim-fusion"
-NVIM_APPNAME=nvim-fusion nvim
+git clone git@github.com:XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
 ```
 
-Use `NVIM_APPNAME=nvim-fusion nvim` sempre que quiser abrir essa instalação. Se desejar, adicione ao seu `~/.bashrc` ou `~/.zshrc`:
+### 3. Inicie o Neovim
 
 ```bash
-alias fusion='NVIM_APPNAME=nvim-fusion nvim'
-```
-
-#### Usar como configuração principal
-
-Feche suas sessões do Neovim. O bloco abaixo preserva configuração, plugins, estado e cache existentes, respeitando os caminhos XDG:
-
-```bash
-backup_stamp="$(date +%Y%m%d-%H%M%S)"
-for nvim_dir in \
-  "${XDG_CONFIG_HOME:-$HOME/.config}/nvim" \
-  "${XDG_DATA_HOME:-$HOME/.local/share}/nvim" \
-  "${XDG_STATE_HOME:-$HOME/.local/state}/nvim" \
-  "${XDG_CACHE_HOME:-$HOME/.cache}/nvim"
-do
-  if [ -e "$nvim_dir" ] || [ -L "$nvim_dir" ]; then
-    mv -- "$nvim_dir" "$nvim_dir.backup-$backup_stamp" || break
-  fi
-done
-```
-
-Confirme que os backups foram criados antes de continuar. Então clone e abra:
-
-```bash
-git clone https://github.com/XzGuuhXz/Nvim-Fusion.git \
-  "${XDG_CONFIG_HOME:-$HOME/.config}/nvim"
 nvim
 ```
 
-### 2. Aguarde a instalação
+O Lazy.nvim será inicializado automaticamente e instalará os plugins configurados.
 
-Na primeira abertura, Lazy.nvim é inicializado e instala os plugins. Mason solicita os servidores configurados, e Treesitter instala os parsers quando o CLI está disponível. Aguarde os downloads e a compilação antes de fechar.
+### 4. Verifique a instalação
 
-Para alinhar os plugins às revisões registradas no repositório, execute dentro do Neovim:
-
-```vim
-:Lazy restore
-```
-
-Espere a conclusão e reinicie o editor. `:Lazy sync` também atualiza plugins e pode alterar o lockfile; use esse comando quando quiser atualizar as dependências.
-
-### 3. Confira a instalação
+Dentro do Neovim:
 
 ```vim
+:checkhealth
 :Lazy
 :Mason
-:checkhealth
 ```
 
-Verifique se não há tarefas com falha. Abra um arquivo de uma linguagem configurada e consulte `:checkhealth vim.lsp` para conferir a conexão do servidor. Providers opcionais podem aparecer no relatório sem impedir a edição.
+## 🐧 Distribuições Linux
 
-### 4. Abra seu projeto
+### Debian / Ubuntu
 
 ```bash
-cd /caminho/do/seu/projeto
-nvim .
-# Na instalação isolada:
-# NVIM_APPNAME=nvim-fusion nvim .
+sudo apt update
+sudo apt install git ripgrep fd-find nodejs npm build-essential
 ```
 
-Pressione `Espaço e` para explorar arquivos, `Espaço ff` para buscar um arquivo e `Espaço fg` para buscar texto. No modo normal, pressione `Espaço` e aguarde o Which-Key mostrar os atalhos disponíveis.
+### Arch Linux
 
-## Primeiros passos
+```bash
+sudo pacman -S git ripgrep fd nodejs npm base-devel tree-sitter-cli
+```
 
-`<leader>` significa **Espaço**. `Espaço ff` significa pressionar Espaço, f, f em sequência, no modo normal. Pressione `Esc` para voltar a esse modo.
+### Fedora
+
+```bash
+sudo dnf install git ripgrep fd-find nodejs npm gcc gcc-c++ make tree-sitter-cli
+```
+
+> O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga. O CLI do Treesitter deve ser **0.26.1 ou superior**.
+
+## 🎨 Identidade visual
+
+O **NVIM FUSION v2 Neon Cyberpunk** usa uma paleta própria baseada em:
+
+- `#08050D` — Void
+- `#0D0816` — Abyss
+- `#130B20` — Panel
+- `#C77DFF` — Neon Violet
+- `#E879F9` — Neon Fuchsia
+- `#A78BFA` — Violet
+- `#F0ABFC` — Fuchsia
+- `#F472B6` — Pink
+
+A interface também utiliza transparência quando o terminal oferece suporte e possui uma statusline global personalizada com Lualine.
+
+## 🧩 Principais componentes
+
+| Área | Tecnologia |
+|---|---|
+| Plugin manager | Lazy.nvim |
+| LSP | nvim-lspconfig + Mason |
+| Completion | nvim-cmp + LuaSnip |
+| Syntax | nvim-treesitter |
+| Busca | Telescope |
+| Arquivos | NvimTree |
+| Git | Gitsigns |
+| Statusline | Lualine |
+| Tabs | Bufferline |
+| Key hints | Which-Key |
+| Diagnósticos | Neovim Diagnostic API |
+| Tema | NVIM FUSION v2 |
+
+## 🧠 LSP incluído
+
+A configuração prepara os seguintes servidores:
+
+```text
+lua_ls
+pyright
+ts_ls
+jsonls
+html
+cssls
+clangd
+```
+
+O Mason gerencia a instalação desses servidores, enquanto a configuração do NVIM FUSION controla explicitamente sua ativação através da API moderna de LSP do Neovim.
+
+## ⌨️ Atalhos principais
+
+`<leader>` = **Espaço**
+
+### Arquivos e busca
 
 | Atalho | Ação |
 |---|---|
-| `i` / `Esc` | Entrar / sair do modo de inserção |
-| `Espaço w` / `Espaço q` | Salvar / fechar a janela atual |
-| `Espaço e` | Abrir ou fechar a árvore de arquivos |
-| `Espaço ff` / `Espaço fg` | Buscar arquivo / texto no projeto |
-| `Espaço fb` | Selecionar um buffer aberto |
-| `Ctrl-h/j/k/l` | Mover entre janelas |
-| `gd` / `gr` / `K` | Definição / referências / documentação com LSP |
-| `Espaço rn` / `Espaço ca` | Renomear símbolo / ações de código |
-| `Espaço lf` | Solicitar formatação ao LSP |
-| `Espaço xx` | Abrir diagnósticos no Trouble |
-| `Tab` / `Shift-Tab` | Navegar nas sugestões ou nos campos de snippet |
-| `Enter` | Confirmar sugestão de autocomplete |
+| `<leader>e` | Abrir/fechar NvimTree |
+| `<leader>o` | Focar NvimTree |
+| `<leader>fe` | Encontrar arquivo no explorer |
+| `<leader>ff` | Buscar arquivos |
+| `<leader>fg` | Live grep |
+| `<leader>fb` | Listar buffers |
+| `<leader>pf` | Buscar arquivos |
+| `<leader>ps` | Buscar palavra |
+| `<leader>pb` | Listar buffers |
+| `<C-p>` | Arquivos Git |
 
-A lista detalhada, incluindo **Git, seleção, completion e dashboard**, está em [Atalhos](docs/KEYMAPS.md).
+### LSP
 
-## Personalização
+| Atalho | Ação |
+|---|---|
+| `gd` | Ir para definição |
+| `gD` | Ir para declaração |
+| `gi` | Ir para implementação |
+| `gr` | Referências |
+| `K` | Documentação/hover |
+| `<leader>rn` | Renomear símbolo |
+| `<leader>ca` | Code action |
+| `<leader>lf` | Formatar código |
+| `<leader>ls` | Signature help |
+| `[d` | Diagnóstico anterior |
+| `]d` | Próximo diagnóstico |
+| `<leader>d` | Mostrar diagnóstico |
 
-A configuração é organizada por responsabilidade:
+### Editor
+
+| Atalho | Ação |
+|---|---|
+| `<leader>w` | Salvar |
+| `<leader>q` | Sair |
+| `<leader>pv` | Abrir NvimTree |
+| `<C-h/j/k/l>` | Navegar entre janelas |
+| `<` / `>` | Indentar seleção mantendo seleção |
+| `J` / `K` | Mover linhas no modo visual |
+
+## 🗂️ Estrutura
 
 ```text
-nvim/
-├── init.lua                    # Entrada e verificação de versão
-├── lazy-lock.json              # Revisões dos plugins
-├── colors/nvim-fusion.lua      # Paleta e highlights
-├── lua/
-│   ├── config/                 # Opções, atalhos, diagnósticos, LSP e Lazy
-│   └── plugins/
-│       ├── editor/             # Telescope, NvimTree e Which-Key
-│       ├── git/                # Gitsigns
-│       ├── lsp/                # Mason, servidores e completion
-│       ├── treesitter/         # Parsers e destaque de sintaxe
-│       ├── ui/                 # Dashboard, tema, statusline e interface
-│       └── util/               # Autopairs e comentários
-├── docs/                       # Guias e imagens
-└── tests/                      # Configuração, regressões, tema, health e lock
+~/.config/nvim/
+├── init.lua
+├── LICENSE
+├── README.md
+├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── nvim.yml
+├── colors/
+│   └── nvim-fusion.lua
+├── tests/
+│   ├── config_test.lua
+│   └── theme_test.lua
+└── lua/
+    ├── config/
+    │   ├── init.lua
+    │   ├── options.lua
+    │   ├── keymaps.lua
+    │   ├── diagnostics.lua
+    │   ├── lsp.lua
+    │   └── lazy.lua
+    └── plugins/
+        ├── init.lua
+        ├── lsp/
+        ├── treesitter/
+        ├── editor/
+        ├── ui/
+        ├── git/
+        └── util/
 ```
 
-Veja [Personalização](docs/CUSTOMIZATION.md) para mudar cores, fundo, indentação, atalhos, plugins e linguagens.
+## 🧪 Testes
 
-## Atualização e restauração
-
-No diretório em que você clonou o rice:
+### Teste de configuração
 
 ```bash
-git status
-git pull --ff-only
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 ```
 
-Se houver alterações pessoais, salve-as em um commit ou backup antes de atualizar. Depois, abra o Neovim e execute `:Lazy restore` para usar as revisões do lockfile recebido. Atualizações deliberadas dos plugins podem ser feitas com `:Lazy update`; revise o `lazy-lock.json` e teste antes de versionar.
+O teste verifica versão mínima, opções essenciais, colorscheme, keymaps principais e os sete servidores LSP configurados.
 
-Para voltar à configuração anterior, feche o Neovim, mova os diretórios atuais para um nome de reserva e devolva cada pasta `.backup-DATA-HORA` ao caminho original. Restaure configuração, dados, estado e cache do mesmo backup. Na instalação isolada, basta voltar a executar `nvim` sem `NVIM_APPNAME`.
+### Teste do tema
 
-## Problemas comuns
-
-Ícones ausentes, LSP sem resposta, busca vazia, parsers e clipboard têm um guia próprio: [Solução de problemas](docs/TROUBLESHOOTING.md).
-
-Para relatar um problema, abra uma [issue](https://github.com/XzGuuhXz/Nvim-Fusion/issues) com sistema operacional, terminal, versão do Neovim, passos para reproduzir e o trecho relevante de `:checkhealth` ou `:messages`.
-
-## Desenvolvimento e testes
-
-A partir da raiz do clone, com plugins e ferramentas instalados:
-
-```bash
-for test in config regression theme health lock; do
-  NVIM_FUSION_TEST="tests/${test}_test.lua" \
-    nvim --headless -u init.lua +"luafile tests/run.lua" || exit 1
-done
-```
-
-O runner retorna falha para exceções e erros de inicialização. Os testes cobrem configuração, mapas, regressões de Treesitter/NvimTree/diff, tema, health de Lazy/Treesitter e revisões dos plugins. O relatório de health é salvo em `test-results/health.txt`. A conexão real de cada LSP depende de seu executável e do projeto aberto.
-
-O [workflow de CI](.github/workflows/nvim.yml) está configurado para Neovim **0.12.5**, tree-sitter CLI **0.26.9** e `:Lazy! restore`, em pushes e pull requests para `main`.
-
-Para explorar o tema interativamente:
+O projeto possui um showcase executável para validar a identidade visual:
 
 ```bash
 nvim -u init.lua +"luafile tests/theme_test.lua"
 ```
 
-Contribuições são bem-vindas. Descreva o problema e a mudança, execute os testes relevantes e inclua capturas quando alterar o visual.
+Ou, dentro do Neovim:
 
-## Licença
+```vim
+:luafile tests/theme_test.lua
+```
 
-Distribuído sob a [licença MIT](LICENSE).
+### CI
+
+Cada push para `main` e cada Pull Request executa automaticamente:
+
+- build do Neovim atual;
+- instalação dos plugins;
+- testes de configuração;
+- teste do tema;
+- `:checkhealth`.
+
+## 🔧 Troubleshooting
+
+### Verifique a versão do Neovim
+
+```bash
+nvim --version
+```
+
+O mínimo suportado é **0.12**.
+
+### Verifique os plugins
+
+```vim
+:Lazy
+:Lazy sync
+```
+
+### Verifique o LSP
+
+```vim
+:Mason
+:LspInfo
+```
+
+### Verifique a instalação geral
+
+```vim
+:checkhealth
+```
+
+### Treesitter
+
+Verifique a versão do CLI:
+
+```bash
+tree-sitter --version
+```
+
+Use **0.26.1 ou superior**. Depois, reinicie o Neovim e, se necessário, atualize os parsers:
+
+```vim
+:TSUpdate
+```
+
+### Problemas de ícones
+
+Instale e configure uma **Nerd Font** no seu terminal. O NVIM FUSION não baixa fontes automaticamente.
+
+## 🔐 Segurança
+
+O repositório não deve conter credenciais, tokens ou configurações específicas da máquina do desenvolvedor.
+
+Antes de enviar alterações:
+
+```bash
+git status
+git diff --cached
+```
+
+Nunca faça commit de:
+
+- API keys
+- tokens de acesso
+- senhas
+- certificados privados
+- arquivos `.env`
+- arquivos de configuração pessoal
+- dumps ou logs contendo dados sensíveis
+
+O projeto inclui um `.gitignore` para reduzir o risco de arquivos locais acidentais serem versionados.
+
+## 📊 Qualidade e desenvolvimento
+
+Antes de abrir um Pull Request, execute:
+
+```bash
+nvim -u init.lua +"Lazy! sync" +qa
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
+nvim -u init.lua +"luafile tests/theme_test.lua" +qa
+nvim -u init.lua "+checkhealth" +qa
+```
+
+Para investigar startup:
+
+```bash
+nvim --startuptime startup.log
+```
+
+Dentro do Neovim, o perfil de plugins pode ser analisado com:
+
+```vim
+:Lazy profile
+```
+
+## 📌 Status do projeto
+
+**NVIM FUSION está em preparação para a release v2.0.0.**
+
+A configuração é voltada para Neovim 0.12+ e pode exigir ajustes dependendo do sistema operacional, terminal, fonte e ferramentas instaladas.
+
+Se encontrar um problema, abra uma Issue informando:
+
+1. Sistema operacional
+2. Versão do Neovim (`nvim --version`)
+3. Saída de `:checkhealth`
+4. Erro exibido no Neovim
+5. Etapas para reproduzir o problema
+
+## 🤝 Contribuindo
+
+Pull requests, issues, sugestões de plugins e melhorias são bem-vindos.
+
+Antes de abrir um PR:
+
+```bash
+git diff
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
+```
+
+Teste a configuração em uma instalação limpa sempre que possível.
+
+Sugestões de commits:
+
+```text
+feat: adiciona suporte a novo recurso
+fix: corrige configuração do LSP
+docs: atualiza documentação
+refactor: reorganiza módulos
+chore: atualiza dependências
+```
+
+## 📄 Licença
+
+Distribuído sob a **MIT License**. Consulte o arquivo [LICENSE](LICENSE).
+
+---
+
+<div align="center">
+
+**NVIM FUSION 🚀**
+
+`Lua` · `Lazy.nvim` · `LSP` · `Treesitter` · `Telescope` · `Git` · `Neon Cyberpunk`
+
+</div>
+
+### Verificação da auditoria
+
+O CI usa Neovim 0.12.5, tree-sitter-cli 0.26.9 e restaura os commits do
+`lazy-lock.json`. Atualizações de plugins devem ser feitas separadamente.
+O runner retorna código 1 para exceções de testes e erros de inicialização.
+
+```bash
+for test in config regression theme health lock; do
+  NVIM_FUSION_TEST=tests/${test}_test.lua nvim --headless -u init.lua +"luafile tests/run.lua" || exit 1
+done
+```
+
+As regressões cobrem Treesitter em Bash/JSX/TSX/help, abertura do NvimTree e
+navegação nativa em diff. O healthcheck do CI verifica Lazy e Treesitter e
+salva `test-results/health.txt`; providers opcionais não bloqueiam o CI.
+Os testes de configuração verificam os mapas locais por meio do callback
+`on_attach`; conexão real dos servidores exige seus executáveis instalados.
+
+Pyright oferece análise e completion, mas não formatação Python. Para usar
+`<leader>lf` em Python, é necessário configurar um formatador adicional.
+Bash, YAML, Rust e Java não têm LSP habilitado por padrão. Instalar um servidor
+no Mason não o habilita automaticamente. Sinais de diagnóstico vazios e undo
+sem persistência são as opções atuais da configuração, não falhas de instalação.

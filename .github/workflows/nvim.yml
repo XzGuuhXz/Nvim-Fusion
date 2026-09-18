@@ -29,27 +29,52 @@ jobs:
             nodejs \
             npm
 
-      - name: Build Neovim 0.12+
+      - name: Build Neovim 0.12.5
         run: |
-          git clone --depth 1 https://github.com/neovim/neovim.git "$RUNNER_TEMP/neovim"
-          cmake -S "$RUNNER_TEMP/neovim" -B "$RUNNER_TEMP/neovim/build" -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$RUNNER_TEMP/neovim/build"
-          sudo cmake --install "$RUNNER_TEMP/neovim/build"
+          git clone --depth 1 --branch v0.12.5 https://github.com/neovim/neovim.git "$RUNNER_TEMP/neovim"
+          make -C "$RUNNER_TEMP/neovim" CMAKE_BUILD_TYPE=Release
+          sudo make -C "$RUNNER_TEMP/neovim" install
 
       - name: Install tree-sitter CLI
-        run: npm install --global tree-sitter-cli
+        run: npm install --global tree-sitter-cli@0.26.9
 
       - name: Validate Neovim version
         run: nvim --version
 
-      - name: Install plugins
-        run: nvim --headless -u init.lua "+Lazy! sync" "+qa"
+      - name: Install locked plugins
+        run: |
+          nvim --headless -u init.lua "+Lazy! restore" "+qa"
+          git diff --exit-code -- lazy-lock.json
+
+      - name: Verify locked revisions
+        env:
+          NVIM_FUSION_TEST: tests/lock_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
 
       - name: Run configuration tests
-        run: nvim --headless -u init.lua "+luafile tests/config_test.lua" "+qa"
+        env:
+          NVIM_FUSION_TEST: tests/config_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
+
+      - name: Run audit regressions
+        env:
+          NVIM_FUSION_TEST: tests/regression_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
 
       - name: Run theme test
-        run: nvim --headless -u init.lua "+luafile tests/theme_test.lua" "+qa"
+        env:
+          NVIM_FUSION_TEST: tests/theme_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
 
       - name: Run health checks
-        run: nvim --headless -u init.lua "+checkhealth" "+qa"
+        env:
+          NVIM_FUSION_TEST: tests/health_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
+
+      - name: Upload health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nvim-health
+          path: test-results/
+          if-no-files-found: ignore

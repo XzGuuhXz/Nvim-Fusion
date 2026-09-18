@@ -1,9 +1,6 @@
 return {
   {
     "mason-org/mason.nvim",
-    dependencies = {
-      "mason-org/mason-lspconfig.nvim",
-    },
     opts = {
       ui = {
         border = "rounded",
@@ -39,9 +36,6 @@ return {
       automatic_enable = false,
     },
     config = function(_, opts)
-      -- Garante que o Mason esteja inicializado antes do mason-lspconfig,
-      -- independentemente da ordem em que o lazy.nvim processe as specs.
-      require("mason").setup()
       require("mason-lspconfig").setup(opts)
     end,
   },

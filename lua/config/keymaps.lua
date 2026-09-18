@@ -1,5 +1,5 @@
 -- Keymaps gerais
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open netrw" })
+vim.keymap.set("n", "<leader>pv", "<cmd>NvimTreeOpen<cr>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 

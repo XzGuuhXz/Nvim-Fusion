@@ -200,7 +200,7 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 |---|---|
 | `<leader>w` | Salvar |
 | `<leader>q` | Sair |
-| `<leader>pv` | Explorer nativo |
+| `<leader>pv` | Abrir NvimTree |
 | `<C-h/j/k/l>` | Navegar entre janelas |
 | `<` / `>` | Indentar seleção mantendo seleção |
 | `J` / `K` | Mover linhas no modo visual |
@@ -244,7 +244,7 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 ### Teste de configuração
 
 ```bash
-nvim -u init.lua +"luafile tests/config_test.lua" +qa
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 ```
 
 O teste verifica versão mínima, opções essenciais, colorscheme, keymaps principais e os sete servidores LSP configurados.
@@ -350,7 +350,7 @@ Antes de abrir um Pull Request, execute:
 
 ```bash
 nvim -u init.lua +"Lazy! sync" +qa
-nvim -u init.lua +"luafile tests/config_test.lua" +qa
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 nvim -u init.lua +"luafile tests/theme_test.lua" +qa
 nvim -u init.lua "+checkhealth" +qa
 ```
@@ -389,7 +389,7 @@ Antes de abrir um PR:
 
 ```bash
 git diff
-nvim -u init.lua +"luafile tests/config_test.lua" +qa
+NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 ```
 
 Teste a configuração em uma instalação limpa sempre que possível.
@@ -417,3 +417,27 @@ Distribuído sob a **MIT License**. Consulte o arquivo [LICENSE](LICENSE).
 `Lua` · `Lazy.nvim` · `LSP` · `Treesitter` · `Telescope` · `Git` · `Neon Cyberpunk`
 
 </div>
+
+### Verificação da auditoria
+
+O CI usa Neovim 0.12.5, tree-sitter-cli 0.26.9 e restaura os commits do
+`lazy-lock.json`. Atualizações de plugins devem ser feitas separadamente.
+O runner retorna código 1 para exceções de testes e erros de inicialização.
+
+```bash
+for test in config regression theme health lock; do
+  NVIM_FUSION_TEST=tests/${test}_test.lua nvim --headless -u init.lua +"luafile tests/run.lua" || exit 1
+done
+```
+
+As regressões cobrem Treesitter em Bash/JSX/TSX/help, abertura do NvimTree e
+navegação nativa em diff. O healthcheck do CI verifica Lazy e Treesitter e
+salva `test-results/health.txt`; providers opcionais não bloqueiam o CI.
+Os testes de configuração verificam os mapas locais por meio do callback
+`on_attach`; conexão real dos servidores exige seus executáveis instalados.
+
+Pyright oferece análise e completion, mas não formatação Python. Para usar
+`<leader>lf` em Python, é necessário configurar um formatador adicional.
+Bash, YAML, Rust e Java não têm LSP habilitado por padrão. Instalar um servidor
+no Mason não o habilita automaticamente. Sinais de diagnóstico vazios e undo
+sem persistência são as opções atuais da configuração, não falhas de instalação.

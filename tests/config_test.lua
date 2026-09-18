@@ -25,23 +25,24 @@ check(vim.o.laststatus == 3, "laststatus must be 3")
 check(vim.o.fillchars:find("eob:", 1, true) ~= nil, "fillchars must configure eob")
 check(vim.g.colors_name == "nvim-fusion", "NVIM FUSION colorscheme must be active")
 
-local function has_keymap(mode, lhs)
-  for _, mapping in ipairs(api.nvim_get_keymap(mode)) do
-    if mapping.lhs == lhs then
-      return true
-    end
-  end
-  return false
+local function has_keymap(lhs, buffer)
+  local mapping = vim.fn.maparg(lhs, "n", false, true)
+  return not vim.tbl_isempty(mapping) and (not buffer or mapping.buffer == 1)
 end
 
-check(has_keymap("n", "<Space>w"), "<leader>w mapping is missing")
-check(has_keymap("n", "<Space>e"), "<leader>e mapping is missing")
-check(has_keymap("n", "gd"), "gd mapping is missing")
-check(has_keymap("n", "<Space>rn"), "<leader>rn mapping is missing")
+check(has_keymap("<leader>w"), "<leader>w mapping is missing")
+check(has_keymap("<leader>e"), "<leader>e mapping is missing")
+local buf = api.nvim_create_buf(false, true)
+api.nvim_buf_call(buf, function()
+  require("config.lsp").on_attach(nil, buf)
+  check(has_keymap("gd", true), "buffer-local gd mapping is missing")
+  check(has_keymap("<leader>rn", true), "buffer-local rename mapping is missing")
+end)
+api.nvim_buf_delete(buf, { force = true })
 
 for _, server in ipairs({ "lua_ls", "pyright", "ts_ls", "jsonls", "html", "cssls", "clangd" }) do
-  local ok = pcall(vim.lsp.config, server)
-  check(ok, "LSP configuration is unavailable: " .. server)
+  check(type(vim.lsp.config[server]) == "table", "LSP configuration is unavailable: " .. server)
+  check(vim.lsp.is_enabled(server), "LSP is not enabled: " .. server)
 end
 
 if #failures > 0 then

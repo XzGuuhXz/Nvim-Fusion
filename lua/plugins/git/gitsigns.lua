@@ -37,8 +37,8 @@ return {
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
 
-        local function map(mode, lhs, rhs, desc)
-          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+        local function map(mode, lhs, rhs, desc, expr)
+          vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, expr = expr or false })
         end
 
         map("n", "]c", function()
@@ -47,7 +47,7 @@ return {
           end
           vim.schedule(function() gs.next_hunk() end)
           return "<Ignore>"
-        end, "󰊢 Next Git hunk")
+        end, "󰊢 Next Git hunk", true)
 
         map("n", "[c", function()
           if vim.wo.diff then
@@ -55,7 +55,7 @@ return {
           end
           vim.schedule(function() gs.prev_hunk() end)
           return "<Ignore>"
-        end, "󰊢 Previous Git hunk")
+        end, "󰊢 Previous Git hunk", true)
 
         map("n", "<leader>hs", gs.stage_hunk, "󰐕 Stage hunk")
         map("n", "<leader>hr", gs.reset_hunk, "󰦒 Reset hunk")

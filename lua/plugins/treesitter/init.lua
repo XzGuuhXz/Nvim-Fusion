@@ -23,6 +23,7 @@ return {
         "python",
         "javascript",
         "typescript",
+        "tsx",
         "html",
         "css",
         "json",
@@ -46,7 +47,7 @@ return {
 
       vim.api.nvim_create_autocmd("FileType", {
         group = group,
-        pattern = parsers,
+        pattern = "*",
         callback = function(args)
           local ok, language = pcall(vim.treesitter.language.get_lang, vim.bo[args.buf].filetype)
 
@@ -55,7 +56,8 @@ return {
           end
 
           -- Não gera erro se o parser ainda não estiver instalado.
-          if not pcall(vim.treesitter.language.add, language) then
+          local loaded_ok, loaded = pcall(vim.treesitter.language.add, language)
+          if not loaded_ok or not loaded then
             return
           end
 

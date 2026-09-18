@@ -22,6 +22,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins", {
+  performance = { rtp = { paths = { vim.g.nvim_fusion_root } } },
+  lockfile = vim.g.nvim_fusion_root .. "/lazy-lock.json",
   ui = {
     border = "rounded",
     icons = {

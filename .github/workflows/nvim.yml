@@ -81,6 +81,12 @@ jobs:
           NVIM_FUSION_TEST: tests/config_test.lua
         run: nvim --headless -u init.lua '+luafile tests/run.lua'
 
+      - name: Install regression parsers before a new editor session
+        run: |
+          nvim --headless -u init.lua \
+            '+lua require("nvim-treesitter").install({"bash","javascript","tsx","vimdoc","lua"}):wait(180000)' \
+            '+qa!'
+
       - name: Run audit regressions
         env:
           NVIM_FUSION_TEST: tests/regression_test.lua

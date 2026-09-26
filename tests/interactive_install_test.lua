@@ -20,4 +20,4 @@ end
 assert(vim.wait(300000, function() return installed_count() == #packages end, 200),
   string.format("Automatic LSP installation incomplete: %d/%d", installed_count(), #packages))
 dofile(vim.g.nvim_fusion_root .. "/tests/lsp_install_test.lua")
-print("All seven LSPs auto-installed in an interactive first session")
+print("All seven LSP installations completed with executable checks")

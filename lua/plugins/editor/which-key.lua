@@ -6,7 +6,7 @@ return {
       preset = "modern",
       icons = {
         breadcrumb = "󰅂",
-        separator = "󰘔",
+        separator = "→",
         group = "󰉋",
       },
       win = {

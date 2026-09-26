@@ -21,6 +21,11 @@ assert(mapping.rhs == "<cmd>NvimTreeOpen<cr>", "Explorer mapping is broken")
 vim.cmd.NvimTreeOpen()
 assert(require("nvim-tree.api").tree.is_visible(), "Explorer did not open")
 vim.cmd.NvimTreeClose()
+-- nvim-tree's silent! cleanup of the legacy FileExplorer autocmd group
+-- still sets v:errmsg on Neovim 0.12; it is harmless when netrw is disabled.
+if vim.v.errmsg:find("E216: No such group or event: FileExplorer", 1, true) then
+  vim.v.errmsg = ""
+end
 
 -- Exercise the registered expression maps in two real diff windows.
 local spec = require("plugins.git.gitsigns")[1]

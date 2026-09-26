@@ -30,6 +30,8 @@ No Telescope, `Ctrl-h` em modo de inserção mostra ajuda sobre as ações dispo
 | `J` / `K` | Mover linhas selecionadas para baixo/cima | Visual |
 | `<` / `>` | Recuar/indentar mantendo seleção | Visual |
 | `n` / `N` | Próxima/anterior ocorrência e centralizar cursor | Normal |
+| `Tab` / `Shift-Tab` | Próximo/anterior buffer (Bufferline) | Normal |
+| `Espaço x` | Fechar buffer atual (Bufferline) | Normal |
 | `gcc` | Alternar comentário na linha, pelo Comment.nvim | Normal |
 | `gc` | Alternar comentário na seleção, pelo Comment.nvim | Visual |
 
@@ -81,6 +83,7 @@ Disponíveis quando o Gitsigns se conecta ao buffer. Um *hunk* é um bloco de li
 | `Espaço tb` | Alternar blame na linha atual |
 | `Espaço hd` | Abrir diff |
 | `Espaço hD` | Diff contra a revisão `~` |
+| `Espaço td` | Mostrar/ocultar linhas removidas |
 | `ih` | Selecionar hunk como objeto de texto, em modo visual/operador |
 
 Os mapas refletem [gitsigns.lua](../lua/plugins/git/gitsigns.lua). A compatibilidade de comandos deve ser revisada ao atualizar a versão do plugin.

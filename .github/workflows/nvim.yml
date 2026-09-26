@@ -9,6 +9,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      XDG_DATA_HOME: ${{ runner.temp }}/fusion-headless/data
+      XDG_STATE_HOME: ${{ runner.temp }}/fusion-headless/state
+      XDG_CACHE_HOME: ${{ runner.temp }}/fusion-headless/cache
+      XDG_CONFIG_HOME: ${{ runner.temp }}/fusion-headless/config
 
     steps:
       - name: Checkout
@@ -36,7 +42,14 @@ jobs:
           sudo make -C "$RUNNER_TEMP/neovim" install
 
       - name: Install tree-sitter CLI
-        run: npm install --global tree-sitter-cli@0.26.9
+        run: |
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/tree-sitter-cli.zip" \
+            https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.9/tree-sitter-cli-linux-x64.zip
+          mkdir -p "$RUNNER_TEMP/tree-sitter-cli"
+          unzip -j "$RUNNER_TEMP/tree-sitter-cli.zip" tree-sitter -d "$RUNNER_TEMP/tree-sitter-cli"
+          sudo install -m 755 "$RUNNER_TEMP/tree-sitter-cli/tree-sitter" /usr/local/bin/tree-sitter
+          tree-sitter --version
 
       - name: Validate Neovim version
         run: nvim --version
@@ -45,6 +58,18 @@ jobs:
         run: |
           nvim --headless -u init.lua "+Lazy! restore" "+qa"
           git diff --exit-code -- lazy-lock.json
+
+      # mason-lspconfig intentionally skips ensure_installed in headless mode.
+      # This path makes headless installation explicit and checks real packages.
+      - name: Bootstrap seven LSPs in headless mode
+        env:
+          NVIM_FUSION_TEST: scripts/bootstrap_lsp.lua
+        run: timeout 420s nvim --headless -u init.lua '+luafile tests/run.lua'
+
+      - name: Verify real LSP clients
+        env:
+          NVIM_FUSION_TEST: tests/lsp_attach_test.lua
+        run: timeout 240s nvim --headless -u init.lua '+luafile tests/run.lua'
 
       - name: Verify locked revisions
         env:
@@ -61,6 +86,11 @@ jobs:
           NVIM_FUSION_TEST: tests/regression_test.lua
         run: nvim --headless -u init.lua '+luafile tests/run.lua'
 
+      - name: Verify completion and snippets
+        env:
+          NVIM_FUSION_TEST: tests/completion_test.lua
+        run: nvim --headless -u init.lua '+luafile tests/run.lua'
+
       - name: Run theme test
         env:
           NVIM_FUSION_TEST: tests/theme_test.lua
@@ -70,6 +100,32 @@ jobs:
         env:
           NVIM_FUSION_TEST: tests/health_test.lua
         run: nvim --headless -u init.lua '+luafile tests/run.lua'
+
+      # Keep a separate Mason installation to verify first-session auto-install.
+      # The Python runner allocates a PTY; headless bootstrap cannot prove this.
+      - name: Restore plugins in second fresh XDG environment
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/fusion-interactive/data
+          XDG_STATE_HOME: ${{ runner.temp }}/fusion-interactive/state
+          XDG_CACHE_HOME: ${{ runner.temp }}/fusion-interactive/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/fusion-interactive/config
+        run: |
+          nvim --headless -u init.lua "+Lazy! restore" "+qa"
+          git diff --exit-code -- lazy-lock.json
+
+      - name: Verify automatic LSP installation in an interactive session
+        env:
+          TERM: xterm-256color
+          XDG_DATA_HOME: ${{ runner.temp }}/fusion-interactive/data
+          XDG_STATE_HOME: ${{ runner.temp }}/fusion-interactive/state
+          XDG_CACHE_HOME: ${{ runner.temp }}/fusion-interactive/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/fusion-interactive/config
+          NVIM_FUSION_TEST: tests/interactive_install_test.lua
+        run: |
+          for package in lua-language-server pyright typescript-language-server json-lsp html-lsp css-lsp clangd; do
+            test ! -d "$XDG_DATA_HOME/nvim/mason/packages/$package"
+          done
+          python3 scripts/run_interactive_test.py
 
       - name: Upload health report
         if: always()

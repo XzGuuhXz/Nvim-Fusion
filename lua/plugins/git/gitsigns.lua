@@ -45,7 +45,7 @@ return {
           if vim.wo.diff then
             return "]c"
           end
-          vim.schedule(function() gs.next_hunk() end)
+          vim.schedule(function() gs.nav_hunk("next") end)
           return "<Ignore>"
         end, "󰊢 Next Git hunk", true)
 
@@ -53,7 +53,7 @@ return {
           if vim.wo.diff then
             return "[c"
           end
-          vim.schedule(function() gs.prev_hunk() end)
+          vim.schedule(function() gs.nav_hunk("prev") end)
           return "<Ignore>"
         end, "󰊢 Previous Git hunk", true)
 

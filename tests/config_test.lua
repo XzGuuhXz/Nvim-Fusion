@@ -6,6 +6,7 @@
 
 local api = vim.api
 local failures = {}
+local servers = require("config.servers")
 
 local function check(condition, message)
   if not condition then
@@ -34,13 +35,17 @@ check(has_keymap("<leader>w"), "<leader>w mapping is missing")
 check(has_keymap("<leader>e"), "<leader>e mapping is missing")
 local buf = api.nvim_create_buf(false, true)
 api.nvim_buf_call(buf, function()
-  require("config.lsp").on_attach(nil, buf)
+  vim.api.nvim_exec_autocmds("LspAttach", { buffer = buf, data = { client_id = 0 } })
   check(has_keymap("gd", true), "buffer-local gd mapping is missing")
   check(has_keymap("<leader>rn", true), "buffer-local rename mapping is missing")
 end)
 api.nvim_buf_delete(buf, { force = true })
 
-for _, server in ipairs({ "lua_ls", "pyright", "ts_ls", "jsonls", "html", "cssls", "clangd" }) do
+check(vim.deep_equal(servers, { "lua_ls", "pyright", "ts_ls", "jsonls", "html", "cssls", "clangd" }), "server list changed")
+local ts = vim.lsp.config.ts_ls
+check(type(ts) == "table" and type(ts.on_attach) == "function", "upstream TypeScript callback was replaced")
+
+for _, server in ipairs(servers) do
   check(type(vim.lsp.config[server]) == "table", "LSP configuration is unavailable: " .. server)
   check(vim.lsp.is_enabled(server), "LSP is not enabled: " .. server)
 end

@@ -7,11 +7,9 @@ return {
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      local lsp = require("config.lsp")
 
       vim.lsp.config("lua_ls", {
         capabilities = capabilities,
-        on_attach = lsp.on_attach,
         settings = {
           Lua = {
             runtime = { version = "LuaJIT" },
@@ -31,7 +29,6 @@ return {
 
       vim.lsp.config("pyright", {
         capabilities = capabilities,
-        on_attach = lsp.on_attach,
         settings = {
           python = {
             analysis = {
@@ -43,7 +40,6 @@ return {
 
       vim.lsp.config("ts_ls", {
         capabilities = capabilities,
-        on_attach = lsp.on_attach,
         settings = {
           typescript = {
             inlayHints = {
@@ -73,27 +69,17 @@ return {
       for _, server in ipairs({ "jsonls", "html", "cssls" }) do
         vim.lsp.config(server, {
           capabilities = capabilities,
-          on_attach = lsp.on_attach,
         })
       end
 
       vim.lsp.config("clangd", {
         capabilities = capabilities,
-        on_attach = lsp.on_attach,
         cmd = { "clangd", "--background-index", "--clang-tidy" },
         filetypes = { "c", "cpp", "objc", "objcpp" },
         single_file_support = true,
       })
 
-      vim.lsp.enable({
-        "lua_ls",
-        "pyright",
-        "ts_ls",
-        "jsonls",
-        "html",
-        "cssls",
-        "clangd",
-      })
+      vim.lsp.enable(require("config.servers"))
     end,
   },
 }

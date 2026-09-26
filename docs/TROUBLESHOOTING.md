@@ -16,6 +16,26 @@ Abra `:Lazy` e consulte a tarefa que falhou. Confira Git, conexão e permissões
 
 `:Lazy sync` pode atualizar dependências e modificar `lazy-lock.json`. Antes de usar, confira se você quer atualizar ou restaurar as versões do projeto.
 
+## `git pull` bloqueado por `lazy-lock.json`
+
+O Lazy pode modificar o lockfile local. Confira o diff antes de decidir o que preservar:
+
+```bash
+cd ~/.config/nvim
+git status --short
+git diff -- lazy-lock.json
+```
+
+Se quiser guardar a versão local para comparar depois, salve uma cópia fora do clone, restaure o arquivo rastreado e atualize:
+
+```bash
+cp lazy-lock.json "$HOME/lazy-lock.nvim-local.json"
+git restore -- lazy-lock.json
+git pull --ff-only
+```
+
+Se quiser preservar a alteração no histórico, faça um commit em uma branch própria antes de integrar a atualização. Caso o comando anterior tenha sido bloqueado por **outras** alterações locais, trate cada arquivo indicado pelo Git; não use `git reset --hard` para destravar a atualização. Após o pull, execute `:Lazy restore` no Neovim e confira `git diff -- lazy-lock.json`. A cópia local serve para comparar revisões, sem sobrescrever automaticamente o lockfile atualizado.
+
 ## Ícones viraram quadrados
 
 Instale uma Nerd Font e selecione-a como fonte do terminal. Instalar a fonte sem selecioná-la não muda a renderização. Reinicie o terminal se necessário.

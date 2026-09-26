@@ -48,6 +48,7 @@ A configuração usa **Lazy.nvim**, **Mason**, **LSP**, **nvim-cmp**, **Treesitt
 |---|---|
 | Neovim | **0.12+** |
 | Git e acesso à rede | Necessários para Lazy.nvim, plugins, registry e downloads do Mason |
+| curl, tar e unzip | Downloads e extração de pacotes e parsers |
 | Nerd Font | Recomendada para os ícones |
 | ripgrep | Recomendado para buscas do Telescope |
 | Node.js e npm | Necessários para Pyright, TypeScript, JSON, HTML e CSS via Mason |
@@ -107,25 +108,37 @@ Dentro do Neovim:
 
 Confira os sete pacotes instalados em `:Mason` e abra um arquivo de cada linguagem para verificar o cliente conectado com `:LspInfo` ou `:checkhealth vim.lsp`. Veja [instalação limpa e testes](#-testes) e [solução de problemas](docs/TROUBLESHOOTING.md).
 
+### Atualize uma instalação existente
+
+No terminal, consulte primeiro suas alterações locais:
+
+```bash
+cd ~/.config/nvim
+git status --short
+git pull --ff-only
+```
+
+Se `git pull` apontar alterações em `lazy-lock.json`, veja [como preservar o lockfile local](docs/TROUBLESHOOTING.md#git-pull-bloqueado-por-lazy-lockjson). Depois de atualizar o clone, abra o editor e execute `:Lazy restore` para aplicar as revisões do projeto; reinicie e confira `:Mason`. `:Lazy sync` pode alterar o lockfile, então use esse comando somente se quiser atualizar as versões dos plugins.
+
 ## 🐧 Distribuições Linux
 
 ### Debian / Ubuntu
 
 ```bash
 sudo apt update
-sudo apt install git ripgrep fd-find nodejs npm build-essential
+sudo apt install git ripgrep fd-find nodejs npm build-essential curl tar unzip
 ```
 
 ### Arch Linux
 
 ```bash
-sudo pacman -S git ripgrep fd nodejs npm base-devel tree-sitter-cli
+sudo pacman -S git ripgrep fd nodejs npm base-devel tree-sitter-cli curl tar unzip
 ```
 
 ### Fedora
 
 ```bash
-sudo dnf install git ripgrep fd-find nodejs npm gcc gcc-c++ make tree-sitter-cli
+sudo dnf install git ripgrep fd-find nodejs npm gcc gcc-c++ make tree-sitter-cli curl tar unzip
 ```
 
 > O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga. Garanta `tree-sitter --version` ≥ 0.26.1; pacotes da distribuição podem oferecer versões anteriores.
@@ -466,7 +479,7 @@ Distribuído sob a **MIT License**. Consulte o arquivo [LICENSE](LICENSE).
 
 </div>
 
-### Verificação da auditoria
+## Verificação da auditoria
 
 O workflow atual fixa Neovim 0.12.5, tree-sitter-cli 0.26.9 e restaura os commits do
 `lazy-lock.json`. Atualizações de plugins devem ser feitas separadamente.

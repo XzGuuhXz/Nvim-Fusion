@@ -18,8 +18,8 @@ function M.on_attach(_, bufnr)
   map("n", "<leader>lf", function()
     vim.lsp.buf.format({ async = true })
   end, "Format code")
-  map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
-  map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
+  map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "Previous diagnostic")
+  map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, "Next diagnostic")
   map("n", "<leader>d", vim.diagnostic.open_float, "Show diagnostic")
 end
 

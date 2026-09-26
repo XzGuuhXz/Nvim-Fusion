@@ -47,13 +47,14 @@ A configuração usa **Lazy.nvim**, **Mason**, **LSP**, **nvim-cmp**, **Treesitt
 | Requisito | Versão / observação |
 |---|---|
 | Neovim | **0.12+** |
-| Git | Necessário para o Lazy.nvim |
+| Git e acesso à rede | Necessários para Lazy.nvim, plugins, registry e downloads do Mason |
 | Nerd Font | Recomendada para os ícones |
 | ripgrep | Recomendado para buscas do Telescope |
-| Node.js | Necessário para alguns LSPs, conforme a linguagem |
-| Python | Necessário para o Pyright, conforme sua instalação |
-| C/C++ toolchain | Necessário para clangd e compilação de projetos |
-| tree-sitter CLI | **0.26.1+** para instalação/atualização dos parsers |
+| Node.js e npm | Necessários para Pyright, TypeScript, JSON, HTML e CSS via Mason |
+| Python | Interpretador do projeto recomendado para análise com Pyright |
+| Compilador C, `curl` e `tar` | Necessários para instalar parsers do Treesitter |
+| clangd | Instalado via Mason; projetos C/C++ se beneficiam de `compile_commands.json` |
+| tree-sitter CLI | **0.26.1+** para instalação/atualização dos parsers; não confundir com o plugin Neovim |
 
 > O projeto usa APIs modernas do Neovim e a linha atual do nvim-treesitter. Versões antigas do Neovim não são suportadas.
 
@@ -91,7 +92,7 @@ git clone git@github.com:XzGuuhXz/Nvim-Fusion.git ~/.config/nvim
 nvim
 ```
 
-O Lazy.nvim será inicializado automaticamente e instalará os plugins configurados.
+O bootstrap fixa o próprio Lazy.nvim no commit de `lazy-lock.json`; o Lazy instala os plugins e o Mason verifica os sete LSPs assim que a interface interativa é anexada. Mantenha o editor aberto até os downloads terminarem. Instalação de pacotes e conexão a um buffer são etapas distintas.
 
 ### 4. Verifique a instalação
 
@@ -101,7 +102,10 @@ Dentro do Neovim:
 :checkhealth
 :Lazy
 :Mason
+:checkhealth vim.lsp
 ```
+
+Confira os sete pacotes instalados em `:Mason` e abra um arquivo de cada linguagem para verificar o cliente conectado com `:LspInfo` ou `:checkhealth vim.lsp`. Veja [instalação limpa e testes](#-testes) e [solução de problemas](docs/TROUBLESHOOTING.md).
 
 ## 🐧 Distribuições Linux
 
@@ -124,7 +128,7 @@ sudo pacman -S git ripgrep fd nodejs npm base-devel tree-sitter-cli
 sudo dnf install git ripgrep fd-find nodejs npm gcc gcc-c++ make tree-sitter-cli
 ```
 
-> O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga. O CLI do Treesitter deve ser **0.26.1 ou superior**.
+> O Neovim 0.12+ deve ser instalado separadamente caso a versão disponível no repositório da distribuição seja antiga. Garanta `tree-sitter --version` ≥ 0.26.1; pacotes da distribuição podem oferecer versões anteriores.
 
 ## 🎨 Identidade visual
 
@@ -156,7 +160,7 @@ A interface também utiliza transparência quando o terminal oferece suporte e p
 | Tabs | Bufferline |
 | Key hints | Which-Key |
 | Diagnósticos | Neovim Diagnostic API |
-| Tema | NVIM FUSION v2 |
+| Tema | NVIM FUSION v2 (padrão); TokyoNight opcional |
 
 ## 🧠 LSP incluído
 
@@ -172,7 +176,9 @@ cssls
 clangd
 ```
 
-O Mason gerencia a instalação desses servidores, enquanto a configuração do NVIM FUSION controla explicitamente sua ativação através da API moderna de LSP do Neovim.
+Os nomes pertencem a [lua/config/servers.lua](lua/config/servers.lua). `mason-lspconfig` usa a lista para **instalar** os pacotes em uma sessão interativa; [lua/plugins/lsp/servers.lua](lua/plugins/lsp/servers.lua) usa `vim.lsp.config` para **configurá-los** e `vim.lsp.enable` para **habilitá-los**. Um cliente só está **conectado** quando abre um buffer compatível e encontra o executável e uma raiz adequada. O `lazy-lock.json` fixa plugins, não versões dos binários instalados pelo Mason. O modo headless usa um [bootstrap explícito](#instalação-isolada-em-modo-headless).
+
+Para usar o tema alternativo temporariamente, execute `:colorscheme tokyonight-night` (ou `tokyonight-storm`, `tokyonight-moon`, `tokyonight-day`). O tema local permanece o padrão após reiniciar. Veja [Personalização](docs/CUSTOMIZATION.md#tema-e-transparência).
 
 ## ⌨️ Atalhos principais
 
@@ -216,6 +222,8 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 |---|---|
 | `<leader>w` | Salvar |
 | `<leader>q` | Sair |
+| `<Tab>` / `<S-Tab>` | Próximo / anterior buffer |
+| `<leader>x` | Fechar buffer |
 | `<leader>pv` | Abrir NvimTree |
 | `<C-h/j/k/l>` | Navegar entre janelas |
 | `<` / `>` | Indentar seleção mantendo seleção |
@@ -234,15 +242,19 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 │       └── nvim.yml
 ├── colors/
 │   └── nvim-fusion.lua
-├── tests/
-│   ├── config_test.lua
-│   └── theme_test.lua
+├── scripts/
+│   └── bootstrap_lsp.lua
+├── tests/                    # configuração, regressão, tema, health, lock, LSP
+├── docs/                     # arquitetura, atalhos, personalização, diagnóstico
 └── lua/
     ├── config/
     │   ├── init.lua
     │   ├── options.lua
     │   ├── keymaps.lua
     │   ├── diagnostics.lua
+    │   ├── autocmds.lua
+    │   ├── colorscheme.lua
+    │   ├── servers.lua
     │   ├── lsp.lua
     │   └── lazy.lua
     └── plugins/
@@ -255,6 +267,8 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
         └── util/
 ```
 
+Veja [Arquitetura e manutenção](docs/ARCHITECTURE.md) para entender as dependências e o fluxo de inicialização.
+
 ## 🧪 Testes
 
 ### Teste de configuração
@@ -263,7 +277,24 @@ O Mason gerencia a instalação desses servidores, enquanto a configuração do 
 NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 ```
 
-O teste verifica versão mínima, opções essenciais, colorscheme, keymaps principais e os sete servidores LSP configurados.
+O teste verifica versão mínima, opções essenciais, colorscheme, keymaps principais e os sete servidores LSP configurados. Essa verificação **não comprova que os executáveis foram instalados nem que os clientes se conectaram**.
+
+### Instalação isolada em modo headless
+
+Execute a partir da raiz do repositório, em Linux/macOS, com Neovim 0.12+, Git, Node.js/npm e acesso à rede. Os diretórios XDG temporários impedem que plugins ou servidores instalados anteriormente façam o teste passar indevidamente:
+
+```bash
+test_root="$(mktemp -d)"
+export XDG_DATA_HOME="$test_root/data"
+export XDG_STATE_HOME="$test_root/state"
+export XDG_CACHE_HOME="$test_root/cache"
+export XDG_CONFIG_HOME="$test_root/config"
+nvim --headless -u init.lua '+Lazy! restore' '+qa'
+NVIM_FUSION_TEST=scripts/bootstrap_lsp.lua nvim --headless -u init.lua '+luafile tests/run.lua'
+NVIM_FUSION_TEST=tests/lsp_attach_test.lua nvim --headless -u init.lua '+luafile tests/run.lua'
+```
+
+O script de bootstrap aguarda até cinco minutos e então verifica instalação e executáveis. O teste de conexão abre arquivos de sete linguagens em projetos temporários. Guarde o caminho de `test_root` para examinar logs em caso de falha. Esse procedimento testa o bootstrap headless explicitamente; para verificar a instalação automática do `ensure_installed`, abra `nvim` em uma sessão interativa com os mesmos diretórios vazios, aguarde `:Mason` terminar e confira os sete pacotes. Remova o diretório temporário apenas quando não precisar mais dos logs.
 
 ### Teste do tema
 
@@ -283,11 +314,12 @@ Ou, dentro do Neovim:
 
 Cada push para `main` e cada Pull Request executa automaticamente:
 
-- build do Neovim atual;
-- instalação dos plugins;
-- testes de configuração;
-- teste do tema;
-- `:checkhealth`.
+- build do Neovim 0.12.5 e instalação do tree-sitter CLI 0.26.9;
+- restauração dos plugins travados;
+- instalação headless explícita, conexão real dos sete LSPs e testes de configuração, regressão, completion, tema e health;
+- instalação automática dos sete LSPs em outra sessão com PTY e diretórios XDG vazios.
+
+Confira as etapas em [.github/workflows/nvim.yml](.github/workflows/nvim.yml).
 
 ## 🔧 Troubleshooting
 
@@ -303,7 +335,7 @@ O mínimo suportado é **0.12**.
 
 ```vim
 :Lazy
-:Lazy sync
+:Lazy restore
 ```
 
 ### Verifique o LSP
@@ -365,7 +397,7 @@ O projeto inclui um `.gitignore` para reduzir o risco de arquivos locais acident
 Antes de abrir um Pull Request, execute:
 
 ```bash
-nvim -u init.lua +"Lazy! sync" +qa
+nvim --headless -u init.lua +"Lazy! restore" +qa
 NVIM_FUSION_TEST=tests/config_test.lua nvim --headless -u init.lua +"luafile tests/run.lua"
 nvim -u init.lua +"luafile tests/theme_test.lua" +qa
 nvim -u init.lua "+checkhealth" +qa
@@ -436,12 +468,12 @@ Distribuído sob a **MIT License**. Consulte o arquivo [LICENSE](LICENSE).
 
 ### Verificação da auditoria
 
-O CI usa Neovim 0.12.5, tree-sitter-cli 0.26.9 e restaura os commits do
+O workflow atual fixa Neovim 0.12.5, tree-sitter-cli 0.26.9 e restaura os commits do
 `lazy-lock.json`. Atualizações de plugins devem ser feitas separadamente.
 O runner retorna código 1 para exceções de testes e erros de inicialização.
 
 ```bash
-for test in config regression theme health lock; do
+for test in config regression completion theme health lock; do
   NVIM_FUSION_TEST=tests/${test}_test.lua nvim --headless -u init.lua +"luafile tests/run.lua" || exit 1
 done
 ```
@@ -449,8 +481,8 @@ done
 As regressões cobrem Treesitter em Bash/JSX/TSX/help, abertura do NvimTree e
 navegação nativa em diff. O healthcheck do CI verifica Lazy e Treesitter e
 salva `test-results/health.txt`; providers opcionais não bloqueiam o CI.
-Os testes de configuração verificam os mapas locais por meio do callback
-`on_attach`; conexão real dos servidores exige seus executáveis instalados.
+Os mapas locais de LSP são registrados por `LspAttach`; o teste de configuração
+não substitui `tests/lsp_attach_test.lua`, que verifica clientes reais após instalar os servidores.
 
 Pyright oferece análise e completion, mas não formatação Python. Para usar
 `<leader>lf` em Python, é necessário configurar um formatador adicional.

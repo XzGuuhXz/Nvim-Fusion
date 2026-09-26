@@ -2,18 +2,8 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
-    build = function()
-      -- O CLI é necessário para compilar/atualizar parsers.
-      -- Se estiver ausente, não transforme a atualização do plugin em erro fatal.
-      if vim.fn.executable("tree-sitter") == 1 then
-        vim.cmd("TSUpdate")
-      else
-        vim.notify(
-          "Nvim Fusion: tree-sitter CLI não encontrado. Instale tree-sitter-cli para atualizar os parsers.",
-          vim.log.levels.WARN
-        )
-      end
-    end,
+    -- The command build path loads the plugin before executing TSUpdate.
+    build = vim.fn.executable("tree-sitter") == 1 and ":TSUpdate" or false,
     config = function()
       local parsers = {
         "lua",
@@ -34,22 +24,9 @@ return {
         "cpp",
       }
 
-      if vim.fn.executable("tree-sitter") == 1 then
-        require("nvim-treesitter").install(parsers)
-      else
-        vim.notify(
-          "Nvim Fusion: parsers do Tree-sitter não serão instalados automaticamente porque o CLI não está disponível.",
-          vim.log.levels.WARN
-        )
-      end
-
-      local group = vim.api.nvim_create_augroup("NvimFusionTreesitter", { clear = true })
-
-      vim.api.nvim_create_autocmd("FileType", {
-        group = group,
-        pattern = "*",
-        callback = function(args)
-          local ok, language = pcall(vim.treesitter.language.get_lang, vim.bo[args.buf].filetype)
+      local function start(buf)
+        if vim.api.nvim_buf_is_valid(buf) then
+          local ok, language = pcall(vim.treesitter.language.get_lang, vim.bo[buf].filetype)
 
           if not ok or not language then
             return
@@ -61,9 +38,31 @@ return {
             return
           end
 
-          pcall(vim.treesitter.start, args.buf, language)
-        end,
+          pcall(vim.treesitter.start, buf, language)
+        end
+      end
+
+      local group = vim.api.nvim_create_augroup("NvimFusionTreesitter", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "*",
+        callback = function(args) start(args.buf) end,
       })
+
+      if vim.fn.executable("tree-sitter") == 1 then
+        require("nvim-treesitter").install(parsers):await(function(err)
+          if err then
+            vim.notify("Nvim Fusion: parser install failed: " .. tostring(err), vim.log.levels.WARN)
+            return
+          end
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do start(buf) end
+        end)
+      else
+        vim.notify(
+          "Nvim Fusion: parsers do Tree-sitter não serão instalados automaticamente porque o CLI não está disponível.",
+          vim.log.levels.WARN
+        )
+      end
     end,
   },
 }

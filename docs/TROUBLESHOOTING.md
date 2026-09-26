@@ -2,13 +2,13 @@
 
 [← Voltar ao README](../README.md)
 
-Comece com `:messages` e `:checkhealth`. Na instalação isolada, abra sempre com `NVIM_APPNAME=nvim-fusion nvim` para inspecionar os plugins e caminhos corretos.
+Comece com `:messages` e `:checkhealth`. Na instalação isolada, execute `nvim -u init.lua` a partir do clone com diretórios `XDG_DATA_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME` e `XDG_CONFIG_HOME` novos, como no [guia de instalação isolada](../README.md#instalação-isolada-em-modo-headless). `NVIM_APPNAME` sozinho pode apontar para outra configuração se não existir um clone naquele caminho.
 
 ## O editor não carrega a configuração
 
 Confira `nvim --version`: o projeto exige 0.12 ou superior. Dentro do editor, `:echo stdpath('config')` mostra o diretório esperado. O `init.lua` deve estar diretamente nessa pasta.
 
-Se um módulo não for encontrado, confira se o clone está completo e consulte os erros em `:messages`.
+Se um módulo não for encontrado, confira se o clone está completo e consulte os erros em `:messages`. Quando executar com `-u init.lua` fora de `~/.config/nvim`, consulte o caminho guardado em `:lua print(vim.g.nvim_fusion_root)`.
 
 ## Plugins não instalaram ou há erros após atualizar
 
@@ -32,13 +32,13 @@ Arquivos ocultos e ignorados pelo Git podem ficar fora da busca padrão. `Ctrl-p
 
 ## O LSP não inicia
 
-1. Confira em `:Mason` se o servidor terminou de instalar.
-2. Abra um arquivo da linguagem e consulte `:set filetype?`.
-3. Execute `:checkhealth vim.lsp` para verificar servidores e clientes.
-4. Confira as dependências externas e a identificação da raiz do projeto.
+1. Abra o editor em uma sessão interativa e aguarde `:Mason` terminar. `ensure_installed` do mason-lspconfig não é executado em headless; para CI, rode [scripts/bootstrap_lsp.lua](../scripts/bootstrap_lsp.lua) conforme o README.
+2. Confira em `:Mason` o pacote instalado e seu executável. Pyright, `ts_ls`, JSON, HTML e CSS exigem Node.js/npm. `clangd` e `lua_ls` precisam de binários compatíveis com a plataforma; rede e permissões também importam.
+3. Abra um arquivo da linguagem e consulte `:set filetype?` e `:LspInfo`. Se ele já estava aberto durante o download, tente reabri-lo após a instalação.
+4. Execute `:checkhealth vim.lsp` para verificar configuração, clientes e detecção da raiz do projeto. TypeScript requer projeto e versão compatível, e projetos C/C++ se beneficiam de `compile_commands.json`.
 5. Consulte `:messages` e, se necessário, o log cujo caminho aparece em `:lua print(vim.lsp.log.get_filename())`.
 
-Apenas os sete servidores listados no README são habilitados. Instalar um servidor adicional no Mason não altera `vim.lsp.enable` automaticamente.
+Apenas os sete servidores listados no README são habilitados. Instalar um servidor adicional no Mason não altera `vim.lsp.enable` automaticamente. O `lazy-lock.json` fixa a revisão dos plugins, não as versões dos servidores baixados.
 
 ## Formatação não funciona em Python
 
@@ -48,14 +48,14 @@ Pyright fornece análise de código e completion, mas não formatação. `Espaç
 
 Confira `tree-sitter --version` e a disponibilidade de um compilador C. O CI usa tree-sitter CLI 0.26.9. Sem o CLI, a configuração avisa e não instala os parsers automaticamente.
 
-Depois de instalar as dependências, reinicie e execute:
+Também são necessários `curl` e `tar` para obter parsers e um compilador C para compilá-los. Depois de instalar as dependências, reinicie e execute:
 
 ```vim
 :TSUpdate
 :checkhealth nvim-treesitter
 ```
 
-A instalação de parsers exige downloads. Destaque de sintaxe não confirma que um LSP está conectado.
+A instalação de parsers exige downloads. A configuração tenta ativar o destaque também em buffers já abertos quando a instalação termina; se o destaque continuar ausente, reabra o arquivo e consulte `:messages`. Destaque de sintaxe não confirma que um LSP está conectado.
 
 ## Clipboard não funciona
 

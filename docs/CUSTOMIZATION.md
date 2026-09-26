@@ -6,7 +6,7 @@ Edite os arquivos no clone que você usa para iniciar o Neovim. Reinicie o edito
 
 ## Tema e transparência
 
-A paleta e os highlights ficam em [colors/nvim-fusion.lua](../colors/nvim-fusion.lua). O tema é local ao repositório e é carregado por [lua/plugins/ui/nvim-fusion.lua](../lua/plugins/ui/nvim-fusion.lua).
+A paleta e os highlights ficam em [colors/nvim-fusion.lua](../colors/nvim-fusion.lua). O tema local é aplicado em [lua/config/colorscheme.lua](../lua/config/colorscheme.lua), antes dos plugins; também é a preferência de instalação do Lazy. Para experimentar o tema alternativo instalado como plugin lazy, use `:colorscheme tokyonight-night` (ou `tokyonight-storm`, `tokyonight-moon`, `tokyonight-day`). A especificação fica em [lua/plugins/ui/tokyonight.lua](../lua/plugins/ui/tokyonight.lua). Reiniciar restaura o tema local.
 
 | Cor | Hex | Uso na paleta |
 |---|---|---|
@@ -85,13 +85,12 @@ Reinicie, instale pelo Lazy e revise a alteração em `lazy-lock.json`. Para rem
 
 ## Adicionar uma linguagem
 
-1. Adicione o nome de configuração do servidor à lista `ensure_installed` em [mason.lua](../lua/plugins/lsp/mason.lua), se ele for suportado pelo Mason.
-2. Em [servers.lua](../lua/plugins/lsp/servers.lua), configure-o com `vim.lsp.config`, reutilizando `capabilities` e `lsp.on_attach` definidos nesse módulo.
-3. Acrescente-o à lista passada a `vim.lsp.enable`.
-4. Se houver um parser correspondente, adicione-o em [plugins/treesitter/init.lua](../lua/plugins/treesitter/init.lua).
-5. Reinicie, confira a instalação em `:Mason` e abra um projeto da linguagem para validar a conexão com `:checkhealth vim.lsp`.
+1. Acrescente o nome de configuração do servidor em [config/servers.lua](../lua/config/servers.lua), se o pacote for suportado pelo Mason. Essa lista alimenta `ensure_installed` e `vim.lsp.enable`.
+2. Em [plugins/lsp/servers.lua](../lua/plugins/lsp/servers.lua), use `vim.lsp.config` para opções específicas, reutilizando `capabilities`. Os atalhos comuns vêm de `LspAttach` em [config/autocmds.lua](../lua/config/autocmds.lua); preserve os callbacks próprios dos servidores.
+3. Se houver um parser correspondente, adicione-o em [plugins/treesitter/init.lua](../lua/plugins/treesitter/init.lua).
+4. Reinicie em sessão interativa, espere a instalação em `:Mason` e abra um projeto da linguagem para validar a conexão com `:checkhealth vim.lsp`.
 
-Instalar no Mason e habilitar no LSP são etapas diferentes. O nome do parser também pode ser diferente do nome do servidor.
+Instalar no Mason, configurar/habilitar no Neovim e conectar o cliente são etapas diferentes. O nome do parser também pode ser diferente do nome do servidor. Para CI/headless, atualize os casos em `scripts/bootstrap_lsp.lua` e os testes de LSP conforme necessário; o lockfile não fixa a versão dos binários baixados pelo Mason.
 
 ## Dashboard e painéis
 

@@ -3,12 +3,18 @@ return {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
-      icons = {
-        error = "󰅚",
-        warning = "󰀪",
-        hint = "󰌶",
-        information = "󰋽",
-        other = "󰠱",
+      formatters = {
+        severity_icon = function(ctx)
+          local severity = ctx.item.severity or vim.diagnostic.severity.ERROR
+          local icons = {
+            [vim.diagnostic.severity.ERROR] = "󰅚",
+            [vim.diagnostic.severity.WARN] = "󰀪",
+            [vim.diagnostic.severity.HINT] = "󰌶",
+            [vim.diagnostic.severity.INFO] = "󰋽",
+          }
+          return { text = (icons[severity] or "󰠱") .. " ", hl = "DiagnosticSign" ..
+            ({ [1] = "Error", [2] = "Warn", [3] = "Info", [4] = "Hint" })[severity] }
+        end,
       },
     },
     cmd = "Trouble",

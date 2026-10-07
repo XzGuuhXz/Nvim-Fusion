@@ -10,13 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      XDG_DATA_HOME: ${{ runner.temp }}/fusion-headless/data
-      XDG_STATE_HOME: ${{ runner.temp }}/fusion-headless/state
-      XDG_CACHE_HOME: ${{ runner.temp }}/fusion-headless/cache
-      XDG_CONFIG_HOME: ${{ runner.temp }}/fusion-headless/config
-
     steps:
+      - name: Configure isolated test environment
+        shell: bash
+        run: |
+          echo "XDG_DATA_HOME=$RUNNER_TEMP/fusion-headless/data" >> "$GITHUB_ENV"
+          echo "XDG_STATE_HOME=$RUNNER_TEMP/fusion-headless/state" >> "$GITHUB_ENV"
+          echo "XDG_CACHE_HOME=$RUNNER_TEMP/fusion-headless/cache" >> "$GITHUB_ENV"
+          echo "XDG_CONFIG_HOME=$RUNNER_TEMP/fusion-headless/config" >> "$GITHUB_ENV"
+
       - name: Checkout
         uses: actions/checkout@v4
 
